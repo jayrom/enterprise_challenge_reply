@@ -8,9 +8,9 @@
 
 <br>
 
-# Nome do projeto
+# Reply - Enterprise Challenge
 
-## Nome do grupo
+## Grupo TiãoTech
 
 ## 👨‍🎓 Integrantes: 
 - <a href="https://www.linkedin.com/in/edmilson-marciano-02648a33">Edmilson Marciano</a>
@@ -27,7 +27,10 @@
 
 ## 📜 Descrição
 
-*Descreva seu projeto com base no texto do PBL (até 600 palavras)*
+O presente projeto trata da concepção e desenvolvimento de um sistema inteligente de manutenção preditiva (SIMP) e, como tal, seu principal objetivo é permitir que administradores e técnicos de plantas industriais tenham à disposição informações avançadas sobre falhas futuras em equipamentos estratégicos. Com posse dessas informações, medidas corretivas poderão ser adotadas e ações de manutenção preventiva poderão ser levados a efeito, resguardando a integridade dos equipamentos e preservando a sanidade do processo produtivo.
+O SIMP terá como base o uso de Inteligência Artificial que, a partir do monitoramento dos equipamentos da planta, poderá inferir futuras falhas, apontar possíveis causas e propor iniciativas.
+
+*(continua...)*
 
 
 ## 📁 Estrutura de pastas
