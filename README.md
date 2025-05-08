@@ -25,7 +25,7 @@
 ### Coordenador(a)
 - <a href="https://www.linkedin.com/in/andregodoichiovato">Andre Godoi Chiovato</a>
 
-
+---
 
 ## Conteúdo
 
@@ -39,13 +39,6 @@
 - [Fluxo de dados](#fluxo-de-dados)
 - [Plano inicial de desenvolvimento](#plano-inicial-de-desenvolvimento)
 - [Ideias para evolução](#ideias-para-evolução-implementação-futura)
-- []()
-- []()
-- []()
-- []()
-
-
-
 
 ## Descrição
 
