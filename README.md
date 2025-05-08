@@ -26,7 +26,28 @@
 - <a href="https://www.linkedin.com/in/andregodoichiovato">Andre Godoi Chiovato</a>
 
 
-<h2> 📜 Descrição </h2>
+
+## Conteúdo
+
+- [Visão geral do SIMP](#visão-geral-do-simp)
+- [Tecnologia empregada](#tecnologia-empregada)
+    - [Linguagens de programação](#linguagens-de-programação)
+    - [Bibliotecas de IA](#bibliotecas-de-ia)
+    - [Serviços de nuvem](#serviços-de-nuvem)
+    - [Bancos de dados](#bancos-de-dados)
+- [Arquitetura geral](#arquitetura-geral)
+- [Fluxo de dados](#fluxo-de-dados)
+- [Plano inicial de desenvolvimento](#plano-inicial-de-desenvolvimento)
+- [Ideias para evolução](#ideias-para-evolução-implementação-futura)
+- []()
+- []()
+- []()
+- []()
+
+
+
+
+## Descrição
 
 ## Visão geral do SIMP
     
@@ -111,14 +132,14 @@ As opções adotadas de bancos de dados são totalmente adequadas às estruturas
 - Serviço de armazenamento de objetos, será usado para armazenamento geral de dados brutos, logs, documentos e artefatos dos modelos de IA etc.
 
 
-# Arquitetura geral
+## Arquitetura geral
 
-![alt text](/assets/simp_arq.jpg)
+![Arquitetura geral inicial do SIMP](/assets/simp_arq.jpg)
 *Arquitetura geral inicial do SIMP*
 
 
 
-## Descrição dos componentes
+### Descrição dos componentes
 
 ### Equipamento
 
@@ -158,21 +179,21 @@ Concebida para ser o núcleo do sistema, concentra as seguintes funcionalidades:
 
 A plataform em nuvem considera também a integração com os serviços em nuvem, responsáveis, no todo ou em parte, por algumas das funcionalidades relacionadas acima.
 
-# Fluxo de dados
+## Fluxo de dados
 
 Segue uma descrição da pipeline de dados, desde a coleta via sensores até a geração de insights, com as etapas de utilização e transformação de dados.
 
-![alt text](/assets/simp_data_pipeline.jpg)
+![Fluxo de dados de produção do SIMP](/assets/simp_data_pipeline.jpg)
 *Fluxo de dados de produção do SIMP*
 
 
 A imagem acima um esboça o fluxo de dados de produção. Ela é focada em operacionalizar o modelo de machine learning treinado para gerar previsões em tempo real ou quase real com os novos dados dos sensores que chegam continuamente. Seu objetivo é fornecer insights (alertas e previsões).
 
-## Pipeline de desenvolvimento
+### Pipeline de desenvolvimento
 
 Durante as fases de desenvolvimento, o fluxo de dados poderá ser ligeiramente alterado, terá uma natureza mais exploratória e estará mais voltado à explorar os dados históricos e simulados, experimentar diferentes técnicas de preparação de dados, engenharia de features e algoritmos de machine learning, treinar e avaliar modelos. O objetivo é desenvolver e validar modelos preditivos eficazes antes de sua implantação em produção.
 
-# Plano inicial de desenvolvimento
+## Plano inicial de desenvolvimento
     
 A presente proposta de roadmap abstrai a necessidade de integração com o andamento dos módulos de aulas da FIAP. Ele apresenta uma visão de alto nível com a divisão em sprints de duas semanas, com seus objetivos e tecnologia empregada.
     
@@ -239,7 +260,7 @@ A presente proposta de roadmap abstrai a necessidade de integração com o andam
     - Leonardo Camacho - Scrum master
     - Lucas Arcanjo - Pesquisa e desenvolvimento
         
-# Ideias para evolução (implementação futura)
+## Ideias para evolução (implementação futura)
 
 Obviamente o SIMP eu seu estágio inicial, conforme descrito acima, esboça o conceito de um sistema de grande potencial e, uma vez que sua implantação inicial se prove promissora a partir de resultados efetivos, haverá campo de exploração para novas funcionalidades, assim como para o aprimoramento das já descritas. Dentre esses melhoramentos, podemos destacar alguns:
 
@@ -264,7 +285,7 @@ Camada de segurança
 
 ---
 
-## 📁 Estrutura de pastas
+### 📁 Estrutura de pastas
 
 Dentre os arquivos e pastas presentes na raiz do projeto, definem-se:
 
@@ -272,12 +293,13 @@ Dentre os arquivos e pastas presentes na raiz do projeto, definem-se:
 
 - <b>assets</b>: imagens.
 
-
 - <b>documents</b>: documentos de projeto.
 
 - <b>README.md</b>: este documento.
 
-## 📋 Licença
+*Foram removidas as pastas default vazias.*
+
+### 📋 Licença
 
 <img style="height:22px!important;margin-left:3px;vertical-align:text-bottom;" src="https://mirrors.creativecommons.org/presskit/icons/cc.svg?ref=chooser-v1"><img style="height:22px!important;margin-left:3px;vertical-align:text-bottom;" src="https://mirrors.creativecommons.org/presskit/icons/by.svg?ref=chooser-v1"><p xmlns:cc="http://creativecommons.org/ns#" xmlns:dct="http://purl.org/dc/terms/"><a property="dct:title" rel="cc:attributionURL" href="https://github.com/agodoi/template">MODELO GIT FIAP</a> por <a rel="cc:attributionURL dct:creator" property="cc:attributionName" href="https://fiap.com.br">Fiap</a> está licenciado sobre <a href="http://creativecommons.org/licenses/by/4.0/?ref=chooser-v1" target="_blank" rel="license noopener noreferrer" style="display:inline-block;">Attribution 4.0 International</a>.</p>
 
