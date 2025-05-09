@@ -40,6 +40,8 @@
 - [Plano inicial de desenvolvimento](#plano-inicial-de-desenvolvimento)
 - [Ideias para evolução](#ideias-para-evolução-implementação-futura)
 
+Veja em [enterprise_challenge_reply.pdf](/Documents/enterprise_challenge_reply.pdf) a reprodução do conteúdo deste README, editorado para impressão.
+
 ## Descrição
 
 ## Visão geral do SIMP
