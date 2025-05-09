@@ -2,3 +2,4 @@
 *.tsv
 *.xls
 *.xlsx
+/not_to_be_uploaded/*
