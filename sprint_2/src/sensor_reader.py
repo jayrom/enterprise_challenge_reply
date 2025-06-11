@@ -11,8 +11,8 @@ import time
 # --- Configurações do MQTT ---
 MQTT_BROKER = "broker.hivemq.com"
 MQTT_PORT = 1883
-MQTT_TOPIC = "sprint2/temperatura" #verificar se o topico está correto
-MQTT_CLIENT_ID = "app_principal" #verificar se o client_id está correto
+MQTT_TOPIC = "planta_2/usinagem_4/equip-001/dados" #verificar se o topico está correto
+MQTT_CLIENT_ID = "reply-equip-001" #verificar se o client_id está correto
 
 # --- Configurações do arquivo CSV ---
 CSV_FILENAME = "dado_sensor_esp32.csv" #Alterar nome do arquivo conforme salvo futuramente
