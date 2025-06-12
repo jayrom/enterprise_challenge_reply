@@ -11,11 +11,11 @@ import time
 # --- Configurações do MQTT ---
 MQTT_BROKER = "broker.hivemq.com"
 MQTT_PORT = 1883
-MQTT_TOPIC = "planta_2/usinagem_4/equip-001/dados" #verificar se o topico está correto
-MQTT_CLIENT_ID = "reply-equip-001" #verificar se o client_id está correto
+MQTT_TOPIC = "planta_2/usinagem_4/equip-001/dados"
+MQTT_CLIENT_ID = "reply-equip-001"
 
 # --- Configurações do arquivo CSV ---
-CSV_FILENAME = "dado_sensor_esp32.csv" #Alterar nome do arquivo conforme salvo futuramente
+CSV_FILENAME = "dado_sensor_esp32.csv"
 
 # --- Dados em memória para o DataFrame ---
 sensor_data_list = []
@@ -33,25 +33,56 @@ def on_connect(client, userdata, flags, rc):
     else:
         print(f"Falha na conexão, código de retorno: {rc}\n")
 
+
 # --- Função de callback MQTT: Quando uma mensagem é recebida ---
 def on_message(client, userdata, msg):
     print(f"Mensagem recebida no tópico {msg.topic}: {msg.payload.decode()}")
     try:
-        # Decodificar a mensagem JSON
         data = json.loads(msg.payload.decode())
 
-        # Adicionar Timestamp local se o sensor não fornecer um Timestamp real
-        if 'timestamp' not in data:
-            data['timestamp_local'] = datetime.now().isoformat()
+        # --- EXTRAÇÃO DOS DADOS ANINHADOS ---
+        processed_data = {}
+        processed_data['timestamp_local'] = datetime.now().isoformat()
 
-        # Adicionar dados à lista com um lock para thread-safe
+        if 'timestamp' in data:
+            processed_data['timestamp'] = data['timestamp']
+        else:
+            processed_data['timestamp'] = None
+
+        processed_data['deviceId'] = data.get('deviceId')
+
+        # Extrair dados de vibração
+        if 'sensors' in data and 'vibration' in data['sensors']:
+            vibration = data['sensors']['vibration']
+            processed_data['accel_x'] = vibration.get('accel_x')
+            processed_data['accel_y'] = vibration.get('accel_y')
+            processed_data['accel_z'] = vibration.get('accel_z')
+            processed_data['gyro_x'] = vibration.get('gyro_x')
+            processed_data['gyro_y'] = vibration.get('gyro_y')
+            processed_data['gyro_z'] = vibration.get('gyro_z')
+
+        # Extrair temperatura do DS18B20 (agora na coluna correta para plotagem)
+        if 'sensors' in data and 'temperature' in data['sensors']:
+            temperature = data['sensors']['temperature']
+            processed_data['temp_ds18b20'] = temperature.get('value_celsius') # <-- ESTA É A LINHA CHAVE
+
+        # Extrair corrente
+        if 'sensors' in data and 'current_voltage' in data['sensors']:
+            current_voltage = data['sensors']['current_voltage']
+            processed_data['current_amps'] = current_voltage.get('current_amps')
+
         with data_lock:
-            sensor_data_list.append(data)
-            print(f"Dados adicionados. Total de registros: {len(sensor_data_list)}")
+            sensor_data_list.append(processed_data)
+            print(f"Dados processados e adicionados. Total de registros: {len(sensor_data_list)}")
     except json.JSONDecodeError:
         print("Erro: Mensagem MQTT não é um JSON válido.")
     except Exception as e:
         print(f"Erro ao processar a mensagem: {e}")
+
+
+
+
+# Resto do código permanece o mesmo
 
 # --- Função para salvar dados no CSV ---
 def save_to_csv():
@@ -65,11 +96,11 @@ def save_to_csv():
                 new_df = pd.DataFrame(sensor_data_list)
                 sensor_data_list.clear() #Limpa a lista após processar
 
-                # Conecatar com o DataFrame existente
+                # Concatenar com o DataFrame existente
                 df = pd.concat([df, new_df], ignore_index=True)
 
                 # Salvar no CSV
-                # Se o arquivo não existir, escreve no cabeçalho. Caso contrário, anexa.
+                # Se o arquivo não existir, escreve o cabeçalho. Caso contrário, anexa.
                 mode = 'a' if os.path.exists(CSV_FILENAME) else 'w'
                 header = not os.path.exists(CSV_FILENAME) # Escreve o cabeçalho apenas na primeira vez
 
@@ -94,30 +125,30 @@ def plot_sensor_data():
                 timestamp_col = 'timestamp' if 'timestamp' in df.columns else 'timestamp_local'
 
                 # Converter o timestamp para datetime
-                if pd.api.types.is_object_dtype(df([timestamp_col])):
+                if pd.api.types.is_object_dtype(df[timestamp_col]): # Correção aqui: use df[timestamp_col]
                     df[timestamp_col] = pd.to_datetime(df[timestamp_col], errors='coerce')
 
                     # Remover linhas com timestamp inválidos se houver erro de conversão
                     df.dropna(subset=[timestamp_col], inplace=True)
 
-                    # Para facilitar a visualização de muitos pontos, podemos pegar os ultimos N registros
-                    # Ou plotar tudo se a quantidade não for excessiva
+                # Para facilitar a visualização de muitos pontos, podemos pegar os ultimos N registros
+                # Ou plotar tudo se a quantidade não for excessiva
 
-                    # Exemplo de gráfico de linha para testar o DS18B20
-                    if 'temp_ds18b20' in df.columns:
-                        ax.clear()
-                        sns.lineplot(x=timestamp_col, y='temp_ds18b20', data=df.tail(100), ax=ax, marker='o') # Últimos 100 pontos
-                        ax.set_title('Temperatura DS18B20 ao longo do tempo')
-                        ax.set_xlabel('Tempo')
-                        ax.set_ylabel('Temperatura (ºC)')
-                        plt.xticks(rotation=45)
-                        plt.tight_layout()
-                        plt.draw()
-                        plt.pause(0.1) # Pequena pausa para a UI ser atualizada
-                    else:
-                        print("Coluna   temp_ds18b20 não encontrada no DataFrame para plotagem.")
+                # Exemplo de gráfico de linha para testar o DS18B20
+                if 'temp_ds18b20' in df.columns:
+                    ax.clear()
+                    sns.lineplot(x=timestamp_col, y='temp_ds18b20', data=df.tail(100), ax=ax, marker='o') # Últimos 100 pontos
+                    ax.set_title('Temperatura DS18B20 ao longo do tempo')
+                    ax.set_xlabel('Tempo')
+                    ax.set_ylabel('Temperatura (ºC)')
+                    plt.xticks(rotation=45)
+                    plt.tight_layout()
+                    plt.draw()
+                    plt.pause(0.1) # Pequena pausa para a UI ser atualizada
                 else:
-                    print("DataFrame vazio, aguardadno dados para plotar.")
+                    print("Coluna temp_ds18b20 não encontrada no DataFrame para plotagem.")
+            else:
+                print("DataFrame vazio, aguardando dados para plotar.")
 
 # --- Função Principal ---
 def main():
@@ -131,7 +162,7 @@ def main():
     except Exception as e:
         print(f"Erro ao conectar ao broker MQTT: {e}")
         return
-    
+
     # Iniciar o loop de rede do MQTT em um thread separada
     client_thread = threading.Thread(target=client.loop_forever)
     client_thread.daemon = True # Permite que o Thread termine quando o programa principal termina
