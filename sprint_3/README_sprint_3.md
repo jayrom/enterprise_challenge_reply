@@ -2,25 +2,23 @@
 
 <p style="padding-top: 40px">
     <a href= "https://www.fiap.com.br/">
-        <img src="assets/logo-fiap.png" alt="FIAP - Faculdade de Informática e Admnistração Paulista" border="0" width=30%>
+        <img src="../assets/logo-fiap.png" alt="FIAP - Faculdade de Informática e Admnistração Paulista" border="0" width=30%>
     </a>
 </p>
 
 <br>
 
 # Reply - Enterprise Challenge - SIMP - Sistema Inteligente de Manutenção Preditiva
+### Sprint 3
+
 
 ## Grupo TiãoTech
 
-Por questões de praticidade e agilidade, este projeto está organizado em sprints, ou seja, entregas em fases distintas. Informações específicas de cada sprint são descritas nos respectivos READMEs, como segue:
-
-- [Sprint 1]( sprint_1/README_sprint_1.md)
-- [Sprint 2]( sprint_2/README_sprint_2.md)
-
-
 ## 👨‍🎓 Integrantes
-
-Considerando que a composição dos grupos se altera ao longo do tempo, por favor, confira a lista dos integrantes no README de cada sprint.
+- <a href="https://www.linkedin.com/in/edmilson-marciano-02648a33">Edmilson Marciano</a>
+- <a href="https://www.linkedin.com/in/jayromazzi">Jayro Mazzi Junior</a>
+- <a href="https://www.linkedin.com/in/leocamacho">Leonardo Camacho</a>
+- <a href="https://www.linkedin.com/in/lucas-a-5b7a70110">Lucas Arcanjo</a> 
 
 ## 👩‍🏫 Professores
 ### Tutor(a) 
@@ -28,25 +26,38 @@ Considerando que a composição dos grupos se altera ao longo do tempo, por favo
 ### Coordenador(a)
 - <a href="https://www.linkedin.com/in/andregodoichiovato">Andre Godoi Chiovato</a>
 
-
 ---
 
+## Conteúdo
+
+.
+
+## Descrição
+
+
+## Objetivo
+
+
+
+
+
+
+
+
+
+---
 
 ### 📁 Estrutura de pastas
 
 Dentre os arquivos e pastas presentes na raiz do projeto, definem-se:
 
-- **.github** - Arquivos de configuração específicos do GitHub.
+- <b>.github</b>: arquivos de configuração específicos do GitHub.
 
-- **assets** - Imagens de uso global.
+- <b>assets</b>: imagens.
 
-- **documents** - Documentos gerais de projeto.
+- <b>documents</b>: documentos de projeto.
 
-- **sprint_1** - Documentação específica da primeira entrega. Comece por [aqui](sprint_1/README_sprint_1.md).
-
-- **sprint_2** - Documentação específica da segunda entrega. Comece por [aqui](sprint_2/README_sprint_2.md).
-
-- **README.md** - Este documento.
+- <b>README.md</b>: este documento.
 
 *Foram removidas as pastas default vazias.*
 
