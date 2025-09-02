@@ -93,7 +93,7 @@ Os dados simulados não representam os dados crus coletados dos sensores. Em vez
 Como a frequência de leitura dos sensores pode ser diferente, o computador de borda efetua uma média, de forma a obter um valor único por sensor a cada intervalo definido (no nosso caso, 10 minutos).
 Os dados numéricos são formatados, para diminuir o volume enviado.
 
-### A ‘fonte da verdade’ - Dados puros e os registros de manutenção
+### A *fonte da verdade* - Dados puros e os registros de manutenção
 Os dados que serão posteriormente utilizados para o treinamento dos modelos não são os dados puros recebidos do computador de borda e sim os registros enriquecidos de manutenção. Para compor esses registros e prepará-los para o treinamento de modelos, houve a intervenção de um engenheiro de dados que, a partir da ocorrência de uma falha, avaliou os dados históricos que levaram a ela, para identificar o início do comportamento anômalo causador da falha. Observe a imagem a seguir:
 
 ![Timeline da falha](assets/reply_3_failure_timeline.png)
@@ -118,11 +118,53 @@ Ao abraçar esses dois desafios, colocamo-nos diante de uma **abordagem híbrida
 
 ### Exploração dos dados
 
+Todo o trabalho de preparação dos dados aqui comentado foi desenvolvido no notebook [sprint_3/src/reply_3_app.ipynb](src/reply_3_app.ipynb).
+
+Apesar de já termos uma forte noção das características dos dados adotados, por serem dados simulados, ainda assim e em nome da prática didática, realizamos a busca por dados ausentes e por duplicatas. Obviamente, os dados se mostraram bastante comportados nesse sentido. 
+Já, tanto a verificação de outliers, como da correlação entre variáveis, levantaram alguns pontos de reflexão, discutidos a seguir.
+
+#### Investigação de outliers
+
+A verificação de outliers revelou uma quantidade considerável de outliers. 
+Diante disso e observando visualmente o comportamento dos dados, levantamos a hipótese de que os outliers encontrados referem-se justamente àqueles dados portadores das informações de anomalia que estamos buscando. Por isso, passamos a investigar essa possibilidade.
+
+![Comportamento dos dados](assets/reply_3_data_behaviour.png)
+*<center><sub>Comportamento dos dados</sub></center>*
+
+Filtramos o dataset, mantendo apenas os dados do equipamento que não apresentou falha e geramos um novo boxplot. Como resultado, verificamos a diminuição bastante acentuada dos outliers, o que nos levou a considerar verdadeira a nossa hipótese, **mantendo os outliers para treinamento dos modelos**.
+
+![Outliers em dados com e sem falhas](assets/reply_3_outliers.png)
+*<center><sub>Outliers em dados com e sem falhas</sub></center>*
+
+Via de regra, outliers são dados legítimos e portanto importantes para o problema. Eles representam um problema quando indicam uma falha nítida dos dados, um erro claro de coleta. Já quando o objetivo principal é detectar anomalias em situações como a nossa, ou seja, falhas em equipamentos, os outliers podem ser exatamente os dados que procuramos, pois carregam a informação da anomalia e, nesse caso, devem ser preservados.
+
+Outliers são nocivos quando há a possibilidade de uma falha de leitura, de registro dos dados ou quando representam uma variável desconhecida e desconsiderada, ainda que importante. Por outro lado, são benéficos e necessários quando nos ajudam a compreender o comportamento dos dados de forma legítima.
 
 
+#### Correlação de variáveis
+
+Além do heatmap da matriz de correlação (abaixo), a mera observação visual dos dados já sugere uma alta correlação entre as variáveis, especialmente no período que antecede a falha.
+
+![Heatmap da matriz de correlação das variáveis](assets/reply_3_heatmap.png)
+*<center><sub>Heatmap da matriz de correlação das variáveis</sub></center>*
 
 
+A própria lógica da ocorrência de uma falha em um equipamento rotativo sugere essa correlação:
+> - À medida que os componentes de um motor, por exemplo, se desgastam, é esperado que o atrito entre as peças móveis aumente. 
+> - Esse atrito extra gera calor, o que faz com que a temperatura do componente aumente.
+> - Ao mesmo tempo, o atrito e o desgaste geram um aumento na vibração, que se manifesta como picos e um aumento no valor RMS. 
+> - Motores industriais síncronos de corrente alternada (os mais comuns) têm rotação constante, sincronizada à frequência da rede elétrica. Para manter a rotação numa situação de atrito elevado, acabam por aumentar o torque necessário, exigindo mais corrente da rede elétrica. 
 
+Logo, maior desgaste, maior vibração, maior atrito, maior temperatura e mais corrente, ou seja, as variáveis se comportam de forma muito semelhante.
+
+Há diversos motivos para querermos remover variáveis de alta correlação (veja, por exemplo, o rtigo https://medium.com/@sujathamudadla1213/why-we-have-to-remove-highly-correlated-features-in-machine-learning-9a8416286f18). Elas podem ser nocivas de diversas maneiras e prejudicar os resultados que buscamos.
+Ao investigar nossos dados, no entanto, surgiu-nos a hipótese de que o comportamento de alta correlação detectado pode estar ligado ao fato de se tratar de dados simulados. Dados reais, via de regra, não são tão comportados.
+
+Além disso, nem todas as falhas em motores se devem ao desgaste. Podemos imaginar outros exemplos, como rede elétrica deficiente, má fixação dos componentes, acoplamentos desalinhados, desbalanceamento, impactos etc. Diferentes causas podem levar a correlação a outros índices.
+
+De qualquer maneira, os dados, ainda que correlacionados, trazem informações diferentes e mesmo complementares, contam diferentes histórias, levando a um diagnóstico mais rico. 
+
+Expostas essas razões, optamos por manter as variáveis, por considerar que a correlação detectada pode ser benéfica e mesmo contextual.
 
 
 
