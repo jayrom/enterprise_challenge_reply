@@ -37,26 +37,32 @@
 
 ## Objetivos desta entrega
 
-* 1 - **Modelagem de banco de dados** - Propor uma modelagem de banco de dados funcional e normalizada, adequada para armazenar os dados coletados pelos sensores.
-* 2 - **Modelo de Machine Learning** - Criar um modelo simples de Machine Learning, utilizando os dados gerados na entrega anterior (ou dados simulados).
-Premissas
-Foco no aprendizado
+* **1 - Modelagem de banco de dados** - Propor uma modelagem de banco de dados funcional e normalizada, adequada para armazenar os dados coletados pelos sensores.
+* **2 - Modelo de Machine Learning** - Criar um modelo simples de Machine Learning, utilizando os dados gerados na entrega anterior (ou dados simulados).
+
+## Premissas
+
+### Foco no aprendizado
 Em termos gerais, a principal diretriz foi conservar o caráter da prática das técnicas de modelagem de IA e de bases de dados, de forma a fixar o conhecimento e preparar-se para o exercício profissional, desenvolvendo o espírito investigativo e de melhoria contínua nas entregas.
 
-Ausência de dados reais
-Apesar da busca por datasets que representassem de forma adequada nosso problema, terminamos por criar um script para geração de um dataset simulado
-Visão geral da solução
-[figura]
+### Uso de dados simulados
+Apesar da nossa busca intensiva por datasets que representassem de forma adequada nosso problema, terminamos por criar um script para geração de um dataset simulado, que será descrito mais adiante.
+
+### Visão conceitual da solução
+
+![Visão conceitual da solução](assets/reply_3_overview.png)
+*<center><sub>Visão geral simplificada da arquitetura</sub></center>*
 Descrição
+- As entregas desta fase, destacadas na figura acima, estão listadas no item **Entregáveis e localização**, no final deste documento.
 
 
-Destaques desta entrega
 
 
+# 1 - Modelagem de banco de dados
 
-1 - Modelagem de banco de dados
+### Diagrama Entidade-Relacionamento
 
-Diagrama Entidade-Relacionamento
+
 
 Descrição das tabelas e campos
 
@@ -104,10 +110,6 @@ Exploração dos dados
 
 
 
-### Visão conceitual da solução
-
-![Visão conceitual da solução](assets/reply_3_overview.png)
-*<center><sub>Visão geral simplificada da arquitetura</sub></center>*
 
 ### Diagrama Entidade-Relacionamento
 
