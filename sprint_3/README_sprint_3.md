@@ -82,9 +82,9 @@ Integração com visualização de dados
 
 ### Dados iniciais simulados
 Os dados simulados foram criados a partir de um script Python. Algumas características desses dados:
-- Simulam o monitoramento de dois motores industriais idênticos.
-- Incluem dados por um período de 60 dias, com uma medição a cada 10 minutos.
-- Simulam uma falha progressiva em um dos equipamentos, a partir de 30 dias antes da falha total. O outro equipamento operará normalmente durante todo o período e servirá de linha de base.
+> - Simulam o monitoramento de dois motores industriais idênticos.
+> - Incluem dados por um período de 60 dias, com uma medição a cada 10 minutos.
+> - Simulam uma falha progressiva em um dos equipamentos, a partir de 30 dias antes da falha total. O outro equipamento operará normalmente durante todo o período e servirá de linha de base.
 
 O script para geração dos dados encontra-se em src/data_generation.ipynb.
 
@@ -94,11 +94,18 @@ Como a frequência de leitura dos sensores pode ser diferente, o computador de b
 Os dados numéricos são formatados, para diminuir o volume enviado.
 
 ### A ‘fonte da verdade’ - Dados puros e os registros de manutenção
-Os dados que serão posteriormente utilizados para o treinamento dos modelos não são os dados puros recebidos do computador de borda e sim os registros enriquecidos de manutenção. Para compor esses registros e prepará-los para o treinamento de modelos, houve a intervenção de um engenheiro de dados que, a partir da ocorrência de uma falha, avaliou os dados históricos que levaram a ela, para identificar o início do comportamento anômalo causador da falha. Eis a sequência:
+Os dados que serão posteriormente utilizados para o treinamento dos modelos não são os dados puros recebidos do computador de borda e sim os registros enriquecidos de manutenção. Para compor esses registros e prepará-los para o treinamento de modelos, houve a intervenção de um engenheiro de dados que, a partir da ocorrência de uma falha, avaliou os dados históricos que levaram a ela, para identificar o início do comportamento anômalo causador da falha. Observe a imagem a seguir:
 
-1. Ocorre a falha
-2. Um técnico de manutenção registra o evento. Esse registro contém o dia e horário exatos da ocorrência e o motivo (ex.: desgaste do rolamento, bobina do estator em curto etc.).
-3. Com base nesses registros, o cientista de dados ou equivalente vai proceder à rotulagem dos dados que antecederam a falha (ou backwards labeling), para que eles contenham a informação adicional da quantidade de dias para a ocorrência da falha (days_to_failure) e o status (failure_mode).
+![Timeline da falha](assets/reply_3_failure_timeline.png)
+*<center><sub>Timeline da falha</sub></center>*
+
+
+
+Eis a sequência:
+
+> 1. Ocorre a falha
+> 2. Um técnico de manutenção registra o evento. Esse registro contém o dia e horário exatos da ocorrência e o motivo (ex.: desgaste do rolamento, bobina do estator em curto etc.).
+> 3. Com base nesses registros, o cientista de dados ou equivalente vai investigar o sinal dos sensores para identificar o início dos sinais anômalos e, feito isso, irá proceder à rotulagem dos dados que antecederam a falha (ou backwards labeling), para que eles contenham a informação adicional da quantidade de dias para a ocorrência da falha (days_to_failure) e o status (failure_mode).
 
 Esse processo deverá ser repetido para cada falha registrada. Isso permitirá que se construa um dataset completo e rotulado ao longo do tempo e que esses dados sejam a ***fonte de verdade*** para o treinamento dos modelos.
 
@@ -107,7 +114,7 @@ Veja figura pipelines
 ### Escolha da abordagem
 Analisando detidamente o problema que estamos tentando resolver, ou seja, a predição de falhas em equipamentos industriais, percebemos que, embora sugira ser um simples problema de regressão, já que estamos analisando variáveis numéricas para determinar a quantidade de dias para falha ( ```days-to-failure``` ). Por outro lado, tratamos também de determinar o valor para uma categoria discreta ( ```failure_mode``` ), com o objetivo de determinar o estado do equipamento (normal ou anômalo)
  
-Ao abraçar esses dois desafios, colocamo-nos diante de uma abordagem híbrida, com uma abordagem de classificação, para a emissão de alertas, e outra de regressão, para a construção de um prognóstico.
+Ao abraçar esses dois desafios, colocamo-nos diante de uma **abordagem híbrida**, com uma abordagem de classificação, para a emissão de alertas, e outra de regressão, para a construção de um prognóstico.
 
 ### Exploração dos dados
 
