@@ -186,7 +186,17 @@ Mais adiante, poderemos observar os resultados da avaliação dos modelos e tece
 
 ### Treinamento
 
+Uma vez que nosso dataset esteja devidamente preparado, temos a base adequada para o desenvolvimento dos modelos preditivos, o que nos leva à fase de treinamento.
 
+O objetivo aqui é que nosso modelo possa compreender a história oculta que nossos dados nos contam e aprender a identificar os padrões sutis que levam a uma falha futura.
+
+![Treinamento de modelos](assets/reply_3_model_training.png)
+*<center><sub>Treinamento de modelos</sub></center>*
+
+Nossa estratégia de treinamento dos modelos foi dividida em duas frentes para resolver o problema de manutenção preditiva de forma abrangente:
+
+1. Primeiro, um modelo de classificação (Regressão Logística e SVM) foi treinado para a tarefa de detecção de falha, ou seja, para classificar o estado do motor em 'Normal' ou 'Em Falha' com base nas leituras dos sensores. 
+2. Em seguida, um modelo de regressão (Regressão Linear e Random Forest Regressor) foi treinado para a tarefa de prognóstico, prevendo o valor contínuo de 'dias para a falha' quando a detecção de falha já tiver sido feita. Essa abordagem dupla garante que o sistema não apenas alerte sobre uma falha iminente, mas também forneça um prognóstico preciso da vida útil restante do componente.
 
 ---
 
