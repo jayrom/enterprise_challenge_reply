@@ -227,11 +227,45 @@ A tarefa de classificação, que visa determinar se o motor está em estado 'Nor
 
 A matriz de confusão nos permite identificar os tipos de erros. No contexto de manutenção preditiva, os **Falsos Negativos** (quando o modelo prevê 'Normal', mas a falha é real) são o pior tipo de erro, pois podem levar a falhas catastróficas. Por outro lado, os **Falsos Positivos** (um alerta falso) são menos críticos, mas podem causar custos desnecessários com inspeções. A análise da matriz de confusão de ambos os modelos mostrou que eles minimizam de forma eficaz os Falsos Negativos, tornando-os excelentes candidatos para a nossa solução de detecção.
 
-#### **Conclusão**
-
 A análise comparativa valida a nossa estratégia de utilizar modelos de Machine Learning distintos. A abordagem híbrida, combinando um modelo de classificação (como SVM ou Regressão Logística) para a detecção de falha e um modelo de regressão robusto (Random Forest) para o prognóstico da vida útil restante, é a mais eficaz. Ela nos permite construir uma solução completa, que não só alerta para uma falha iminente, mas também fornece um prazo acionável para a manutenção.
 
+### Predições
 
+Submetemos alguns exemplos de leituras aos modelos para obter suas predições.Desses testes, destacamos uma das predições, que nos provoca um ponto de reflexão. Eis os resultados:
+```
+Dados puros
+    [[55.   7.5  0.8  1.   0. ]]
+
+Dados de leitura
+    - Temperatura: 55.0 °C
+    - Corrente: 7.5 A
+    - Vibração: 0.8 g
+    - Dispositivo: motor_1
+
+Dados padronizados
+    [[ 1.9   1.26  0.96  1.   -1.  ]]
+
+Predições
+    - Vida Útil Restante (RF Regressor): 18.43 dias
+    - Classificação (Regressão Logística): o estado do motor é 'normal'
+
+```
+
+O exemplo nos traz informações importantes:
+
+#### Validação da abordagem híbrida
+
+O exemplo mostra os dois modelos trabalhando em conjunto. O modelo de Regressão Logística dá o parecer primário ("o estado do motor é 'normal'"), enquanto o modelo de Random Forest fornece uma predição numérica ("18.43 dias"). Essa dualidade de resultados valida a nossa estratégia de usar um modelo para cada tipo de problema. 
+
+#### A Inconsistência lógica
+
+O exemplo deixa evidente que há uma incongruência lógica nas predições. Ora, se o motor está normal, ele não deveria ter uma vida útil curta. A predição do modelo de regressão só faria sentido se o modelo de classificação tivesse indicado um motor em falha. Isso aponta para a realidade de que os modelos, apesar de fornecerem diagnósticos complementares, foram construídos e trabalham de forma independente, o que pode levar a tais discrepâncias. 
+
+Este exemplo, em vez de ser um problema, é uma prova de que a arquitetura de sistema de dois passos é a mais adequada para o problema de manutenção preditiva. Ele aponta para a necessidade da integração prática dos modelos, não apenas sobre o seu treinamento.
+
+Essa integração deve obedecer a uma lógica de negócio, presente na própria lógica da aplicação. Dessa forma, os dados seriam submetidos à regressão, **apenas** se a classificação detectar uma falha, evitando assim, predições inconsistentes.
+
+Além disso, não podemos deixar de mencionar que o desenvolvimento de modelos de sucesso não é uma atividade linear. Ao contrário, é fruto de um processo iterativo de melhoria contínua, ao longo de erros, ajustes, hipóteses falhas etc., até que tenhamos resultados satisfatórios.
 
 ---
 
