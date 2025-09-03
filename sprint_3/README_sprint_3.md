@@ -99,8 +99,6 @@ Os dados que serão posteriormente utilizados para o treinamento dos modelos nã
 ![Timeline da falha](assets/reply_3_failure_timeline.png)
 *<center><sub>Timeline da falha</sub></center>*
 
-
-
 Eis a sequência:
 
 > 1. Ocorre a falha
@@ -109,12 +107,13 @@ Eis a sequência:
 
 Esse processo deverá ser repetido para cada falha registrada. Isso permitirá que se construa um dataset completo e rotulado ao longo do tempo e que esses dados sejam a ***fonte de verdade*** para o treinamento dos modelos.
 
-Veja figura pipelines
+![Fluxo de dados para treinamento e para predição](assets/reply_3_pipelines.png)
+*<center><sub>Fluxo de dados para treinamento e para predição</sub></center>*
 
 ### Escolha da abordagem
-Analisando detidamente o problema que estamos tentando resolver, ou seja, a predição de falhas em equipamentos industriais, percebemos que, embora sugira ser um simples problema de regressão, já que estamos analisando variáveis numéricas para determinar a quantidade de dias para falha ( ```days-to-failure``` ). Por outro lado, tratamos também de determinar o valor para uma categoria discreta ( ```failure_mode``` ), com o objetivo de determinar o estado do equipamento (normal ou anômalo)
+Analisando detidamente o problema que estamos tentando resolver, ou seja, a predição de falhas em equipamentos industriais, percebemos que, embora sugira ser um simples problema de regressão, já que estamos analisando variáveis numéricas para determinar a quantidade de dias para falha ( ```days-to-failure``` ). Por outro lado, tratamos também de determinar o valor para uma categoria discreta ( ```failure_mode``` ), com o objetivo de determinar o estado do equipamento (normal ou anômalo), o que configuraria um problema de classificação.
  
-Ao abraçar esses dois desafios, colocamo-nos diante de uma **abordagem híbrida**, com uma abordagem de classificação, para a emissão de alertas, e outra de regressão, para a construção de um prognóstico.
+Ao abraçar esses dois desafios, colocamo-nos diante de uma **abordagem híbrida**, com uma componente de classificação, para a emissão de alertas, e outra de regressão, para a construção de um prognóstico.
 
 ### Exploração dos dados
 
@@ -138,7 +137,7 @@ Filtramos o dataset, mantendo apenas os dados do equipamento que não apresentou
 
 Via de regra, outliers são dados legítimos e portanto importantes para o problema. Eles representam um problema quando indicam uma falha nítida dos dados, um erro claro de coleta. Já quando o objetivo principal é detectar anomalias em situações como a nossa, ou seja, falhas em equipamentos, os outliers podem ser exatamente os dados que procuramos, pois carregam a informação da anomalia e, nesse caso, devem ser preservados.
 
-Outliers são nocivos quando há a possibilidade de uma falha de leitura, de registro dos dados ou quando representam uma variável desconhecida e desconsiderada, ainda que importante. Por outro lado, são benéficos e necessários quando nos ajudam a compreender o comportamento dos dados de forma legítima.
+Outliers são nocivos quando há a possibilidade de uma falha de leitura, de registro dos dados ou quando representam uma variável desconhecida e desconsiderada, ainda que importante. Por outro lado, são benéficos e necessários quando nos ajudam a compreender o comportamento dos dados de forma legítima (veja o artigo [The impact of outliers on Data: when to remove and when to retain](https://medium.com/@abhaysingh71711/the-impact-of-outliers-on-data-when-to-remove-and-when-to-retain-fb6e474ddbd8)).
 
 
 #### Correlação de variáveis
@@ -157,14 +156,35 @@ A própria lógica da ocorrência de uma falha em um equipamento rotativo sugere
 
 Logo, maior desgaste, maior vibração, maior atrito, maior temperatura e mais corrente, ou seja, as variáveis se comportam de forma muito semelhante.
 
-Há diversos motivos para querermos remover variáveis de alta correlação (veja, por exemplo, o rtigo https://medium.com/@sujathamudadla1213/why-we-have-to-remove-highly-correlated-features-in-machine-learning-9a8416286f18). Elas podem ser nocivas de diversas maneiras e prejudicar os resultados que buscamos.
+Há diversos motivos para querermos remover variáveis de alta correlação (veja, por exemplo, o artigo [Why we have to remove highly correlated features in Machine Learning](https://medium.com/@sujathamudadla1213/why-we-have-to-remove-highly-correlated-features-in-machine-learning-9a8416286f18))   . Elas podem ser nocivas de diversas maneiras e prejudicar os resultados que buscamos.
 Ao investigar nossos dados, no entanto, surgiu-nos a hipótese de que o comportamento de alta correlação detectado pode estar ligado ao fato de se tratar de dados simulados. Dados reais, via de regra, não são tão comportados.
 
 Além disso, nem todas as falhas em motores se devem ao desgaste. Podemos imaginar outros exemplos, como rede elétrica deficiente, má fixação dos componentes, acoplamentos desalinhados, desbalanceamento, impactos etc. Diferentes causas podem levar a correlação a outros índices.
 
 De qualquer maneira, os dados, ainda que correlacionados, trazem informações diferentes e mesmo complementares, contam diferentes histórias, levando a um diagnóstico mais rico. 
 
-Expostas essas razões, optamos por manter as variáveis, por considerar que a correlação detectada pode ser benéfica e mesmo contextual.
+Expostas essas razões, **optamos por manter as variáveis**, por considerar que a correlação detectada pode ser benéfica e mesmo contextual.
+
+### Modelos adotados
+
+Escolhemos quatro algorítmos para o desenvolvimento dos modelos:
+
+**Modelos de regressão**
+
+> 1. Regressão Linear
+> 2. Random Forest Regressor
+
+**Modelos de classificação**
+> 3. Regressão Logística
+> 4. Support Vector Machine
+
+Como critério para a escolha dos modelos **Regressão Linear** e **Regressão Logística**, consideramos a sua simplicidade e também por se tratar de abordagens lineares. Ambos são modelos baseline, fáceis de treinar e fornecem uma base de comparação fundamental.
+
+Já os modelos **Random Forest Regressor** e **Support Vector Machine** são mais complexos e não lineares. Permitem uma abordagem mais robusta, que permite capturar padrões complexos e não-lineares nos dados.
+
+Mais adiante, poderemos observar os resultados da avaliação dos modelos e tecer algumas considerações.
+
+### Treinamento
 
 
 
