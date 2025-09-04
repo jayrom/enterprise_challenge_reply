@@ -51,28 +51,77 @@ Apesar da nossa busca intensiva por datasets que representassem de forma adequad
 #### Observação
 As entregas desta fase, destacadas na figura acima, estão listadas no item **Entregáveis e localização**, no final deste documento.
 
-
 ## 1 - Modelagem de banco de dados
+
+Dados, sabemos, são a base das soluções de IA. Para mantê-los, o desenvolvimento de um banco de dados bem estruturado logo de início é crucial para o sucesso dessas soluções a longo prazo. Vamos lidar com diferentes tipos e volumes de dados e, a maneira como eles serão armazenados impacta diretamente o desempenho e a escalabilidade do sistema em questão.
 
 ### Diagrama Entidade-Relacionamento
 
 ![Diagrama Entidade-Relacionamento](assets/reply_3_DER.png)
 *<center><sub>Diagrama Entidade-Relacionamento</sub></center>*
 
-
-
-### Descrição das tabelas e campos
-
 ### Relacionamentos implícitos (loose coupling)
+
+As tabelas criadas não têm uma chave estrangeira direta, pois a ligação entre elas é feita por meio de uma lógica na aplicação que usa o `DEVICE_ID` e o `FAILURE_DATE` para unir os dados de forma retrospectiva. Esta abordagem flexível permite a retroalimentação contínua do sistema.
 
 ![Relacionamento implícito entre tabelas](assets/reply_3_loose_coupling.png)
 *<center><sub>Relacionamento implícito entre tabelas</sub></center>*
 
-SSoT - Single Source of Truth
+### Descrição das tabelas e campos
 
-[figura fluxo de dados]
+#### `T_REPLY_SENSOR_READINGS`
 
-Restrições de integridade (tipos de dados, limites de tamanho etc.);
+Tabela para as leituras coletadas dos sensores em campo, agregadas em uma série temporal pelo computador de borda. Serve de fonte primária para a análise de séries temporais e como conjunto de features para os modelos preditivos.
+
+| Campos |  |
+|---:|---|
+| `ID` | `(PK)` Identificador único para cada leitura. Gerado por uma sequência. |
+| `TIMESTAMP` | `(DATETIME)` Momento exato da agregação da leitura. |
+| `DEVICE_ID` | `(VARCHAR)` Identificador do equipamento monitorado. |
+| `TEMPERATURE_C` | `(NUMBER)` Leitura de temperatura, em °C. |
+| `CURRENT_AMPS` | `(NUMBER)` Leitura de corrente elétrica, em A. |
+| `VIBRATION_RMS_G` | `(NUMBER)` Leitura de vibração, em g (aceleração). |
+| `DAYS_TO_FAILURE` | `(NUMBER)` Variável *target* para os modelos de regressão. Inicialmente, terá valor nulo e populada posteriormente a partir de registros de manutenção. |
+| `FAILURE_MODE` | `(VARCHAR)` Variável *target* para os modelos de classificação. Status do equipamento monitorado. Inicialmente, terá valor nulo e populada posteriormente a partir de registros de manutenção. |
+
+#### `T_REPLY_MAINTENANCE_EVENTS`
+
+Tabela para os registros históricos de manutenção, fonte para rotulagem retrospectiva¹. Armazena os registros de manutenção e falhas, que são a *fonte da verdade* para a criação das labels preditivas,
+fornecendo os timestamps e as causas das falhas e permitindo que a aplicação gere as labels `DAYS_TO_FAILURE` e `FAILURE_MODE` na tabela `T_REPLY_SENSOR_READINGS`
+
+| Campos |  |
+|---:|---|
+| `EVENT_ID` | `(PK)` Identificador único para cada evento. Gerado por uma sequência. |
+| `DEVICE_ID` | `(VARCHAR)` Identificador do equipamento monitorado. |
+| `FAILURE_DATE` | `(DATETIME)` Data e hora do registro do evento. |
+| `FAILURE_MODE` | `(VARCHAR)` Status registrado do equipamento monitorado. |
+| `DIAGNOSTIC_NOTES` | `(VARCHAR)` Notas técnicas adicionais de manutenção. |
+
+#### `MODEL_PREDICTIONS`
+
+Tabela para o armazenamento das predições. Permite manter uma separação entre uma base comparativa, que viabiliza a real avalição dos modelos ao longo do tempo, por meio do registro de falsos positivos ou negativos.
+
+| Campos |  |
+|---:|---|
+| `PREDICTION_ID` | `(PK)` Identificador único para cada evento. Gerado por uma sequência. |
+| `TIMESTAMP` | `(DATETIME)` Identificador do equipamento monitorado. |
+| `DEVICE_ID` | `(VARCHAR)` Data e hora do registro do evento. |
+| `PREDICTED_DAYS_TO_FAILURE` | `(NUMBER)` Status registrado do equipamento monitorado. |
+| `PREDICTED_FAILURE_MODE` | `(VARCHAR)` Notas técnicas adicionais de manutenção. |
+| `SENSOR_READING_ID` | `(NUMBER)` Notas técnicas adicionais de manutenção. |
+| `EVALUATION_STATUS` | `(VARCHAR)` Notas técnicas adicionais de manutenção. |
+
+
+¹ - Veja [A fonte da verdade - Dados puros e os registros de manutenção](#a-fonte-da-verdade---dados-puros-e-os-registros-de-manutenção), adiante neste documento.
+
+### Fluxo de dados
+
+![Fluxo de dados](assets/reply_3_pipelines.png)
+*<center><sub>Fluxo de dados</sub></center>*
+
+Restrições de integridade (tipos de dados, limites de tamanho etc.)
+
+O projeto do banco de dados procurou otimizar
 
 Integração com visualização de dados
 
@@ -231,7 +280,7 @@ A análise comparativa valida a nossa estratégia de utilizar modelos de Machine
 
 ### Predições
 
-Submetemos alguns exemplos de leituras aos modelos para obter suas predições.Desses testes, destacamos uma das predições, que nos provoca um ponto de reflexão. Eis os resultados:
+Submetemos alguns exemplos de leituras aos modelos para obter suas predições. Desses testes, destacamos uma das predições, que nos provoca um ponto de reflexão. Eis os resultados:
 ```
 Dados puros
     [[55.   7.5  0.8  1.   0. ]]
