@@ -11,7 +11,6 @@
 # Reply - Enterprise Challenge - SIMP - Sistema Inteligente de Manutenção Preditiva
 ### Sprint 3
 
-
 ## Grupo TiãoTech
 
 ## 👨‍🎓 Integrantes
@@ -44,6 +43,7 @@ Em termos gerais, a principal diretriz foi conservar o caráter da prática das 
 Apesar da nossa busca intensiva por datasets que representassem de forma adequada nosso problema, terminamos por criar um script para geração de um dataset simulado, que será descrito mais adiante.
 
 ### Visão conceitual da solução
+<br>
 
 ![Visão conceitual da solução](assets/reply_3_overview.png)
 *<center><sub>Visão geral simplificada da arquitetura</sub></center>*
@@ -56,6 +56,7 @@ As entregas desta fase, destacadas na figura acima, estão listadas no item **En
 Dados, sabemos, são a base das soluções de IA. Para mantê-los, o desenvolvimento de um banco de dados bem estruturado logo de início é crucial para o sucesso dessas soluções a longo prazo. Vamos lidar com diferentes tipos e volumes de dados e, a maneira como eles serão armazenados impacta diretamente o desempenho e a escalabilidade do sistema em questão.
 
 ### Diagrama Entidade-Relacionamento
+<br>
 
 ![Diagrama Entidade-Relacionamento](assets/reply_3_DER.png)
 *<center><sub>Diagrama Entidade-Relacionamento</sub></center>*
@@ -110,7 +111,6 @@ Tabela para o armazenamento das predições. Permite manter uma separação entr
 | `PREDICTED_FAILURE_MODE` | `(VARCHAR)` Notas técnicas adicionais de manutenção. |
 | `SENSOR_READING_ID` | `(NUMBER)` Notas técnicas adicionais de manutenção. |
 | `EVALUATION_STATUS` | `(VARCHAR)` Notas técnicas adicionais de manutenção. |
-
 
 ¹ - Veja [A fonte da verdade - Dados puros e os registros de manutenção](#a-fonte-da-verdade---dados-puros-e-os-registros-de-manutenção), adiante neste documento.
 
