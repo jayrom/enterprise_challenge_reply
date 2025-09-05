@@ -363,12 +363,7 @@ Essa estratégia, embora mais complexa, permitiu-nos exercitar o desenvolvimento
 [sprint_3/sensor_data/simulated_sensor_data.csv](sensor_data/simulated_sensor_data.csv)
 
 > - Gráficos ou prints dos resultados obtidos com o modelo<br />
-Tanto o [notebook da aplicação](src/reply_3_app.ipynb), quanto o presente documento estão amplamente ilustrados com os gráficos e prints relacionados ao desenvolvimento e teste os modelos.
-
-
-
-
-Gráficos ou prints dos resultados obtidos com o modelo;
+Tanto o [notebook da aplicação](src/reply_3_app.ipynb), quanto o presente documento estão amplamente ilustrados com os gráficos e prints relacionados ao desenvolvimento e teste dos modelos.
 
 ## Como rodar o projeto
 
