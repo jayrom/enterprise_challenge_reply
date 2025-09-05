@@ -1,0 +1,8 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<OSDM_Design class="oracle.dbtools.crest.model.design.Design" name="reply_3" id="C90CAD0F-9AED-C8E0-B07D-89D944CCBB8B" version="3.5">
+<createdBy>jayro.mazzi</createdBy>
+<createdTime>2025-09-05 13:10:46 UTC</createdTime>
+<ownerDesignName>reply_3</ownerDesignName>
+<capitalNames>false</capitalNames>
+<designId>C90CAD0F-9AED-C8E0-B07D-89D944CCBB8B</designId>
+</OSDM_Design>

@@ -25,7 +25,9 @@
 ### Coordenador(a)
 - <a href="https://www.linkedin.com/in/andregodoichiovato">Andre Godoi Chiovato</a>
 
-## 
+## Conteúdo
+
+- [Objetivos desta entrega](#visão-geral-do-simp)
 
 
 ## Objetivos desta entrega
@@ -72,7 +74,7 @@ As tabelas criadas não têm uma chave estrangeira direta, pois a ligação entr
 
 #### `T_REPLY_SENSOR_READINGS`
 
-Tabela para as leituras coletadas dos sensores em campo, agregadas em uma série temporal pelo computador de borda. Serve de fonte primária para a análise de séries temporais e como conjunto de features para os modelos preditivos.
+Tabela para as leituras coletadas dos sensores em campo, agregadas em uma série temporal pelo computador de borda. Serve de fonte primária para a análise de séries temporais e como conjunto de características (*features*) para os modelos preditivos.
 
 | Campos |  |
 |---:|---|
@@ -105,12 +107,12 @@ Tabela para o armazenamento das predições. Permite manter uma separação entr
 | Campos |  |
 |---:|---|
 | `PREDICTION_ID` | `(PK)` Identificador único para cada evento. Gerado por uma sequência. |
-| `TIMESTAMP` | `(DATETIME)` Identificador do equipamento monitorado. |
-| `DEVICE_ID` | `(VARCHAR)` Data e hora do registro do evento. |
-| `PREDICTED_DAYS_TO_FAILURE` | `(NUMBER)` Status registrado do equipamento monitorado. |
-| `PREDICTED_FAILURE_MODE` | `(VARCHAR)` Notas técnicas adicionais de manutenção. |
-| `SENSOR_READING_ID` | `(NUMBER)` Notas técnicas adicionais de manutenção. |
-| `EVALUATION_STATUS` | `(VARCHAR)` Notas técnicas adicionais de manutenção. |
+| `TIMESTAMP` | `(DATETIME)` Momento exato em que a predição foi gerada. |
+| `DEVICE_ID` | `(VARCHAR)` Identificador do equipamento monitorado. |
+| `PREDICTED_DAYS_TO_FAILURE` | `(NUMBER)` Predição da vida útil restante do componente. |
+| `PREDICTED_FAILURE_MODE` | `(VARCHAR)` Predição do estado do equipamento ('normal' ou 'em falha'). |
+| `SENSOR_READING_ID` | `(NUMBER)` Identificador da leitura do sensor que gerou esta predição. Liga a predição à tabela `T_REPLY_SENSOR_READINGS`. |
+| `EVALUATION_STATUS` | `(VARCHAR)` Status da avaliação da predição (ex: 'verdadeiro positivo', 'falso negativo', 'não avaliado'). |
 
 ¹ - Veja [A fonte da verdade - Dados puros e os registros de manutenção](#a-fonte-da-verdade---dados-puros-e-os-registros-de-manutenção), adiante neste documento.
 
@@ -119,12 +121,23 @@ Tabela para o armazenamento das predições. Permite manter uma separação entr
 ![Fluxo de dados](assets/reply_3_pipelines.png)
 *<center><sub>Fluxo de dados</sub></center>*
 
-Restrições de integridade (tipos de dados, limites de tamanho etc.)
+### Restrições de integridade
 
-O projeto do banco de dados procurou otimizar
+A escolha dos tipos de dados e seus tamanhos foi guiada por princípios de integridade dos dados, otimização de armazenamento e performance. Cada tipo foi selecionado para garantir que os dados sejam armazenados de forma precisa e que o banco de dados possa operar de maneira eficiente a longo prazo.
+Houve uma preocupação em *economizar* no que diz espeito ao tamanho dados dados, adotando-se sempre o mínimo necessário para acomodar adequadamente o dado correspondente (ex.: `EVALUATION_STATUS`-`VARCHAR(20 BYTE`) e `DIAGNOSTIC_NOTES`-`VARCHAR(255 BYTE)`).
 
-Integração com visualização de dados
+### Integração com visualização de dados
 
+A integração com ferramentas de visualização de dados abre um leque de possibilidades para acompanhar a saúde dos equipamentos e a performance dos modelos. Algumas ideias:
+> - **Gráfico de linha em tempo real**<br>
+Permite companhar a evolução dos valores de temperatura, corrente e vibração ao longo do tempo. Um esquema adequado de cores pode ajudar a identificar a mudança do status dos equipamentos.
+> - **Matriz de confusão acumulada**<br>
+Gráfico de pizza que mostra os valores acumulados de `Falsos Positivos` e `Verdadeiros Positivos`, mostrando de forma dinâmica o comportamento dos modelos.
+> - **Histogrma de distribuição das predições de vida útil**<br>
+Permite melhorar a programação de manutenções preventivas, a partir da visualização da quantidade de dias comumente prevista antes de uma falha.
+
+Podemos pensar em inúmeras outras possibilidades de visualização que entreguem real valor aos suários, todas utilizando os dados do nosso banco.
+Um dashboard dessa natureza poderia ser rapidamente construída utilizando-se o Stremlit. Ele apresenta vantagens como prototipgem rápida, integração facilitada e nativa com Python, controle total sobre o desenho da interface gráfica, além de ser ideal para um MVP.
 
 
 ## 2 - Modelo de Machine Learning
@@ -195,7 +208,6 @@ Além do heatmap da matriz de correlação (abaixo), a mera observação visual 
 
 ![Heatmap da matriz de correlação das variáveis](assets/reply_3_heatmap.png)
 *<center><sub>Heatmap da matriz de correlação das variáveis</sub></center>*
-
 
 A própria lógica da ocorrência de uma falha em um equipamento rotativo sugere essa correlação:
 > - À medida que os componentes de um motor, por exemplo, se desgastam, é esperado que o atrito entre as peças móveis aumente. 
@@ -315,6 +327,59 @@ Este exemplo, em vez de ser um problema, é uma prova de que a arquitetura de si
 Essa integração deve obedecer a uma lógica de negócio, presente na própria lógica da aplicação. Dessa forma, os dados seriam submetidos à regressão, **apenas** se a classificação detectar uma falha, evitando assim, predições inconsistentes.
 
 Além disso, não podemos deixar de mencionar que o desenvolvimento de modelos de sucesso não é uma atividade linear. Ao contrário, é fruto de um processo iterativo de melhoria contínua, ao longo de erros, ajustes, hipóteses falhas etc., até que tenhamos resultados satisfatórios.
+
+## Conclusão
+
+A jornada de aprendizado neste projeto nos mostrou que IA e Ciência de Dados são um exercício de decisões fundamentadas.
+
+Contrariando práticas comuns, preferimos o atrevimento de manter outliers e variáveis altamente correlacionadas, pois nossa investigação revelou que, para este contexto, eles não são ruído, mas sim sinais valiosos que enriquecem os modelos. 
+
+Da mesma forma, em vez de simplificar o problema, optamos por uma abordagem híbrida de IA, combinando modelos de classificação para a detecção de alertas e de regressão para o prognóstico de falhas. 
+
+Essa estratégia, embora mais complexa, permitiu-nos exercitar o desenvolvimento de uma solução diferenciada, que reflete nossa premissa de ir além do convencional, enfrentando os desafios do problema real com um espírito de exploração e melhoria contínua.
+
+**Grupo TiãoTech**
+
+---
+
+## Entregáveis
+
+### Banco de dados
+
+> - **Script para criação das tabelas**<br />
+[sprint_3/database/reply_3_model.sql](database/reply_3_model.sql)
+> - **Diagrama ER**<br />
+[sprint_3/assets/reply_3_DER.png](assets/reply_3_DER.png)
+> - **Documentação adicional**<br />
+[sprint_3/database/reply_3.dmd](database/reply_3.dmd)
+[sprint_3/database/reply_3](database/reply_3)
+
+### Modelo de Machine Learning
+
+> - Notebook da aplicação para treinamento dos modelos<br />
+[sprint_3/src/reply_3_app.ipynb](src/reply_3_app.ipynb)
+
+> - Dados originais simulados do computador de borda<br />
+[sprint_3/sensor_data/simulated_sensor_data.csv](sensor_data/simulated_sensor_data.csv)
+
+> - Gráficos ou prints dos resultados obtidos com o modelo<br />
+Tanto o [notebook da aplicação](src/reply_3_app.ipynb), quanto o presente documento estão amplamente ilustrados com os gráficos e prints relacionados ao desenvolvimento e teste os modelos.
+
+
+
+
+Gráficos ou prints dos resultados obtidos com o modelo;
+
+## Como rodar o projeto
+
+Para o treinamento dos modelos e visualização dos artefatos:
+Execute o notebook … no Colab
+Suba o arquivo de dados…
+
+
+
+
+
 
 ---
 
