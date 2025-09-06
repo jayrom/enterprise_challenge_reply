@@ -13,6 +13,10 @@
 
 ## Grupo TiãoTech
 
+<p style="padding-top: 10px;">
+    <img src="../assets/tiaotech-logo.png" alt="Grupo TiãoTech" border="0" width=10%>
+</p>
+
 ## 👨‍🎓 Integrantes
 - <a href="https://www.linkedin.com/in/edmilson-marciano-02648a33">RM565912 - Edmilson Marciano</a>
 - <a href="https://www.linkedin.com/in/jayromazzi">RM565576 - Jayro Mazzi Junior</a>
@@ -114,7 +118,7 @@ Tabela para o armazenamento das predições. Permite manter uma separação entr
 | `SENSOR_READING_ID` | `(NUMBER)` Identificador da leitura do sensor que gerou esta predição. Liga a predição à tabela `T_REPLY_SENSOR_READINGS`. |
 | `EVALUATION_STATUS` | `(VARCHAR)` Status da avaliação da predição (ex: 'verdadeiro positivo', 'falso negativo', 'não avaliado'). |
 
-¹ - Veja [A fonte da verdade - Dados puros e os registros de manutenção](#a-fonte-da-verdade---dados-puros-e-os-registros-de-manutenção), adiante neste documento.
+¹ - <sub>Veja [A fonte da verdade - Dados puros e os registros de manutenção](#a-fonte-da-verdade---dados-puros-e-os-registros-de-manutenção), adiante neste documento.</sub>
 
 ### Fluxo de dados
 
@@ -351,44 +355,49 @@ Essa estratégia, embora mais complexa, permitiu-nos exercitar o desenvolvimento
 > - **Diagrama ER**<br />
 [sprint_3/assets/reply_3_DER.png](assets/reply_3_DER.png)
 > - **Documentação adicional**<br />
-[sprint_3/database/reply_3.dmd](database/reply_3.dmd)
+[sprint_3/database/reply_3.dmd](database/reply_3.dmd)<br />
 [sprint_3/database/reply_3](database/reply_3)
 
 ### Modelo de Machine Learning
 
-> - Notebook da aplicação para treinamento dos modelos<br />
+> - **Notebook da aplicação para treinamento dos modelos**<br />
 [sprint_3/src/reply_3_app.ipynb](src/reply_3_app.ipynb)
-
-> - Dados originais simulados do computador de borda<br />
+> - **Dados originais simulados do computador de borda**<br />
 [sprint_3/sensor_data/simulated_sensor_data.csv](sensor_data/simulated_sensor_data.csv)
-
-> - Gráficos ou prints dos resultados obtidos com o modelo<br />
+> - **Modelos treinados**<br />
+[sprint_3/trained_models](trained_models)
+> - **Gráficos ou prints dos resultados obtidos com o modelo**<br />
 Tanto o [notebook da aplicação](src/reply_3_app.ipynb), quanto o presente documento estão amplamente ilustrados com os gráficos e prints relacionados ao desenvolvimento e teste dos modelos.
 
 ## Como rodar o projeto
 
 Para o treinamento dos modelos e visualização dos artefatos:
-Execute o notebook … no Colab
-Suba o arquivo de dados…
+> - Suba o [arquivo de dados](sensor_data/simulated_sensor_data.csv) no Colab.
+> - Execute o [notebook da aplicação](src/reply_3_app.ipynb) no Colab.
 
+Para a criação das tabelas:
+> - Utilize o [script para construção das tabelas](database/reply_3_model.sql) na sua aplicação ².
 
-
-
+² - <sub>Utilizamos o Oracle SQL developer para criação do nosso banco de dados. Logo, algumas instruções podem seguir uma sintaxe diferenciada e seu comportamento pode não ser compatível com outras aplicações de bancos de dados.</sub>
 
 
 ---
 
 ### 📁 Estrutura de pastas
 
-Dentre os arquivos e pastas presentes na raiz do projeto, definem-se:
+Dentre os arquivos e pastas presentes na raiz do sprint 3, definem-se:
 
-- <b>.github</b>: arquivos de configuração específicos do GitHub.
+- **assets**: imagens.
 
-- <b>assets</b>: imagens.
+- **database**: documentação do banco de dados.
 
-- <b>documents</b>: documentos de projeto.
+- **sensor_data**: Dados simulados.
 
-- <b>README.md</b>: este documento.
+- **src**: Código fonte da aplicação
+
+- **trained_models**: Modelos de ML treinados
+
+- **README.md**: este documento.
 
 *Foram removidas as pastas default vazias.*
 
