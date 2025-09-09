@@ -29,15 +29,15 @@
 ### Coordenador(a)
 - <a href="https://www.linkedin.com/in/andregodoichiovato">Andre Godoi Chiovato</a>
 
-## Conteúdo
-
-- [Objetivos desta entrega](#visão-geral-do-simp)
-
 
 ## Objetivos desta entrega
 
 * **1 - Modelagem de banco de dados** - Propor uma modelagem de banco de dados funcional e normalizada, adequada para armazenar os dados coletados pelos sensores.
 * **2 - Modelo de Machine Learning** - Criar um modelo simples de Machine Learning, utilizando os dados gerados na entrega anterior (ou dados simulados).
+
+## Vídeo explicativo
+
+> - [FIAP / Reply - Sprint 3](https://www.youtube.com/watch?v=1H88-qi-KX8)
 
 
 ## Premissas
@@ -347,6 +347,10 @@ Essa estratégia, embora mais complexa, permitiu-nos exercitar o desenvolvimento
 ---
 
 ## Entregáveis
+
+### Vídeo explicativo
+
+> - [FIAP / Reply - Sprint 3](https://www.youtube.com/watch?v=1H88-qi-KX8)
 
 ### Banco de dados
 
