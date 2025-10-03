@@ -99,7 +99,6 @@ float readPotCurrent() {
   return current;
 }
 
-
 // Setup inicial
 void setup() {
   Serial.begin(115200);
@@ -163,11 +162,6 @@ void loop() {
       payload += "}";
       payload += "}";
       payload += "}";
-
-      
-
-
-
 
     Serial.println(payload); // Imprime o payload no Serial Monitor
 
