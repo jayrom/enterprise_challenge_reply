@@ -7,21 +7,21 @@ import time
 # -----------------------------------------------------------------------------
 # Configuração
 # -----------------------------------------------------------------------------
+
 MQTT_BROKER = "broker.hivemq.com"
 MQTT_PORT = 1883
 MQTT_TOPIC = "planta_2/usinagem_4/equip-001/dados"
-# <<< ALTERADO: String de conexão para Oracle >>>
 DB_CONNECTION_STRING = "oracle+oracledb://seu_usuario:sua_senha@host:porta/service_name"
 CSV_DATA_SOURCE = 'dados_teste_para_predicao.csv'
 BATCH_SIZE = 10
 record_buffer = []
 
-# <<< ALTERADO: Nome da tabela conforme seu script SQL >>>
 TABELA_LEITURAS = 'T_REPLY_SENSOR_READINGS'
 
 # -----------------------------------------------------------------------------
 # Lógica de banco de dados
 # -----------------------------------------------------------------------------
+
 engine = create_engine(DB_CONNECTION_STRING)
 
 def flush_buffer_to_db():
@@ -53,6 +53,7 @@ def flush_buffer_to_db():
 # -----------------------------------------------------------------------------
 # Lógica cliente MQTT
 # -----------------------------------------------------------------------------
+
 try:
     df_realista = pd.read_csv(CSV_DATA_SOURCE)
     csv_row_index = 0
