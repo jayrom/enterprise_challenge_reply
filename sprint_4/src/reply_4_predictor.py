@@ -3,13 +3,16 @@ import numpy as np
 import joblib
 from datetime import datetime
 from sqlalchemy import create_engine, text
+import oracledb
 
 # -----------------------------------------------------------------------------
 # 1. Configuração
 # -----------------------------------------------------------------------------
 
 # Banco de dados
-DB_CONNECTION_STRING = "oracle+oracledb://seu_usuario:sua_senha@host:porta/service_name"
+DB_USER = 'RM...'
+DB_PASS = 'pass...'
+DB_CONNECTION_STRING = oracledb.connect(user=DB_USER, password=DB_PASS, dsn='oracle.fiap.com.br:1521/ORCL')
 
 # Tabelas
 TABELA_LEITURAS = 'T_REPLY_SENSOR_READINGS'

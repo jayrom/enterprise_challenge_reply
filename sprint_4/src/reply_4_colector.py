@@ -3,6 +3,7 @@ import pandas as pd
 from datetime import datetime
 from sqlalchemy import create_engine, text
 import time
+import oracledb
 
 # -----------------------------------------------------------------------------
 # Configuração
@@ -11,7 +12,11 @@ import time
 MQTT_BROKER = "broker.hivemq.com"
 MQTT_PORT = 1883
 MQTT_TOPIC = "planta_2/usinagem_4/equip-001/dados"
-DB_CONNECTION_STRING = "oracle+oracledb://seu_usuario:sua_senha@host:porta/service_name"
+
+DB_USER = 'RM...'
+DB_PASS = 'pass...'
+DB_CONNECTION_STRING = oracledb.connect(user=DB_USER, password=DB_PASS, dsn='oracle.fiap.com.br:1521/ORCL')
+
 CSV_DATA_SOURCE = 'dados_teste_para_predicao.csv'
 BATCH_SIZE = 10
 record_buffer = []

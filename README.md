@@ -17,6 +17,7 @@ Por questões de praticidade e agilidade, este projeto está organizado em sprin
 - [Sprint 1]( sprint_1/README_sprint_1.md)
 - [Sprint 2]( sprint_2/README_sprint_2.md)
 - [Sprint 3]( sprint_3/README_sprint_3.md)
+- [Sprint 4]( sprint_3/README_sprint_4.md)
 
 
 ## 👨‍🎓 Integrantes
@@ -48,6 +49,8 @@ Dentre os arquivos e pastas presentes na raiz do projeto, definem-se:
 - **sprint_2** - Documentação específica da segunda entrega. Comece por [aqui](sprint_2/README_sprint_2.md).
 
 - **sprint_3** - Documentação específica da terceira entrega. Comece por [aqui](sprint_3/README_sprint_3.md).
+
+- **sprint_4** - Documentação específica da terceira entrega. Comece por [aqui](sprint_3/README_sprint_4.md).
 
 - **README.md** - Este documento.
 
