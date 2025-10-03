@@ -4,9 +4,9 @@ from datetime import datetime
 from sqlalchemy import create_engine, text
 import time
 
-# ==============================================================================
-# SEÇÃO DE CONFIGURAÇÃO
-# ==============================================================================
+# -----------------------------------------------------------------------------
+# Configuração
+# -----------------------------------------------------------------------------
 MQTT_BROKER = "broker.hivemq.com"
 MQTT_PORT = 1883
 MQTT_TOPIC = "planta_2/usinagem_4/equip-001/dados"
@@ -19,9 +19,9 @@ record_buffer = []
 # <<< ALTERADO: Nome da tabela conforme seu script SQL >>>
 TABELA_LEITURAS = 'T_REPLY_SENSOR_READINGS'
 
-# ==============================================================================
-# LÓGICA DO BANCO DE DADOS (SQLAlchemy)
-# ==============================================================================
+# -----------------------------------------------------------------------------
+# Lógica de banco de dados
+# -----------------------------------------------------------------------------
 engine = create_engine(DB_CONNECTION_STRING)
 
 def flush_buffer_to_db():
@@ -30,7 +30,6 @@ def flush_buffer_to_db():
         return
     print(f"\n[DB WRITER] Atingido o tamanho do lote. Inserindo {len(record_buffer)} registros no DB...")
     
-    # <<< ALTERADO: Query INSERT com nomes de colunas e tabela corretos >>>
     sql_insert_query = text(f"""
         INSERT INTO {TABELA_LEITURAS} (
             TIMESTAMP_TMS, DEVICE_ID, TEMPERATURE_VL,
@@ -51,9 +50,9 @@ def flush_buffer_to_db():
     finally:
         record_buffer = []
 
-# ==============================================================================
-# LÓGICA DO CLIENTE MQTT (O restante do script permanece o mesmo)
-# ==============================================================================
+# -----------------------------------------------------------------------------
+# Lógica cliente MQTT
+# -----------------------------------------------------------------------------
 try:
     df_realista = pd.read_csv(CSV_DATA_SOURCE)
     csv_row_index = 0
@@ -79,7 +78,6 @@ def on_message(client, userdata, msg):
 
     linha_realista = df_realista.iloc[csv_row_index]
     
-    # <<< ALTERADO: Chaves do dicionário para corresponder aos placeholders do SQL >>>
     record_data = {
         'timestamp': pd.to_datetime(linha_realista['timestamp']),
         'device_id': linha_realista['device_id'],
@@ -96,7 +94,6 @@ def on_message(client, userdata, msg):
     if len(record_buffer) >= BATCH_SIZE:
         flush_buffer_to_db()
 
-# ... (Restante do script principal para conectar e rodar o loop) ...
 if __name__ == "__main__":
     client = mqtt.Client(mqtt.CallbackAPIVersion.VERSION1)
     client.on_connect = on_connect
