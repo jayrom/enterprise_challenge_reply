@@ -225,45 +225,6 @@ O sistema, arquitetado de forma modular, está composto por serviços independen
 
 ---
 
-## Entregáveis
-
-### Vídeo explicativo
-
-> - [FIAP / Reply - Sprint 4](https://www.youtube.com/watch?v=1H88-qi-KX8)
-
-### Banco de dados
-
-> - **Script para criação das tabelas**<br />
-[sprint_4/data/database/reply_4_model.sql](database/reply_3_model.sql)
-> - **Diagrama ER**<br />
-[sprint_4/assets/reply_3_DER.png](assets/reply_3_DER.png)
-
-
-### Modelo de Machine Learning
-
-> - **Notebook da aplicação para treinamento dos modelos**<br />
-[sprint_3/src/reply_3_app.ipynb](src/reply_3_app.ipynb)
-> - **Dados originais simulados do computador de borda**<br />
-[sprint_3/sensor_data/simulated_sensor_data.csv](sensor_data/simulated_sensor_data.csv)
-> - **Modelos treinados**<br />
-[sprint_3/trained_models](trained_models)
-> - **Gráficos ou prints dos resultados obtidos com o modelo**<br />
-Tanto o [notebook da aplicação](src/reply_3_app.ipynb), quanto o presente documento estão amplamente ilustrados com os gráficos e prints relacionados ao desenvolvimento e teste dos modelos.
-
-## Como rodar o projeto
-
-Para o treinamento dos modelos e visualização dos artefatos:
-> - Suba o [arquivo de dados](sensor_data/simulated_sensor_data.csv) no Colab.
-> - Execute o [notebook da aplicação](src/reply_3_app.ipynb) no Colab.
-
-Para a criação das tabelas:
-> - Utilize o [script para construção das tabelas](database/reply_3_model.sql) na sua aplicação ².
-
-² - <sub>Utilizamos o Oracle SQL developer para criação do nosso banco de dados. Logo, algumas instruções podem seguir uma sintaxe diferenciada e seu comportamento pode não ser compatível com outras aplicações de bancos de dados.</sub>
-
-
----
-
 ### 📁 Estrutura de pastas
 
 Dentre os arquivos e pastas presentes na raiz do sprint 3, definem-se:
