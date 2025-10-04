@@ -36,7 +36,7 @@ O principal objetivo desta entrega é desenvolver um mínimo produto viável, ou
 
 ## Vídeo explicativo
 
-> - [FIAP / Reply - Sprint 4](---)
+> - [FIAP / Reply - Sprint 3](https://www.youtube.com/watch?v=1H88-qi-KX8)
 
 
 ## Visão geral da solução
@@ -45,7 +45,7 @@ O principal objetivo desta entrega é desenvolver um mínimo produto viável, ou
 ![Visão geral da solução](assets/reply_4_overview.png)
 *<center><sub>Visão geral da solução</sub></center>*
 
-### Descrição dos conceitos
+## Descrição dos conceitos
 
 A seguir descrevemos os principais fluxos previstos para a solução:
 
@@ -58,7 +58,7 @@ Coletar, via MQTT, as leituras enviadas pelos computadpores de borda, que estão
 
 **Componentes**
 
-#### Computação de campo
+### Computação de campo
 
 Esta solução inclui um kit de campo composto por três sensores acoplados a um motor industrial:
 > - Sensor de temperatura
@@ -75,18 +75,24 @@ O ESP32 foi programado¹ para receber as leituras em intervalos regulares e real
 
 ¹ - Veja o código em `src/adge_app.cpp`
 
-#### Simulação de sensores e ESP32
+### Simulação de sensores e ESP32
 
 Para este MVP, os sensores foram simulados utilizando-se o Wokwi. O circuito utilizado na simulação é mostrado na figura a seguir:
 
 ![Circuito de simulação de IoT](assets/reply_4_wokwi_circuitry.png)
 *<center><sub>Circuito de simulação de IoT</sub></center>*
 
-#### Simulação dos dados para predição
+![Serial plotter do Wokwi durante a simulação](assets/reply_4_serial_plotter.png)
+*<center><sub>Serial plotter do Wokwi durante a simulação</sub></center>*
+
+![Texto do serial monitor do Wokwi durante a simulação](assets/reply_4_serial_monitor_text.png)
+*<center><sub>Texto do serial monitor do Wokwi durante a simulação</sub></center>*
+
+### Simulação dos dados para predição
 
 Considerando que os dados efetivamente trazidos do Wokwi não têm valor analítico, das as limitações do simulador, criamos um dataset de dados que procuram imitar os sinais que seriam gerados em uma situação real pelos sensores. Esses dados foram criados a partir de um script desenvolvido especificamente para esse fim (veja o [script para geração de dados para predição](src/predict_data_generation_4.ipynb) e o [dataset simulado para predição](data/predict/dados_teste_para_predicao_1.csv)). 
 
-#### Serviço coletor
+### Serviço coletor
 
 Conecta o broker MQTT para receber os pacotes enviados pelo ESP32 periodicamente, formata os registros adequadamente e os envia ao banco de dados, populando a tabela ```T_REPLY_SENSOR_READINGS```.
 
@@ -99,15 +105,20 @@ Conecta o broker MQTT para receber os pacotes enviados pelo ESP32 periodicamente
 
 **Componentes**
 
-#### Dataset para treinamento
+### Dataset para treinamento
 
 O conjunto de registros que seria utilizado em um ambiente de produção não é composto por leituras puras. Ele recebe a intervenção humana de forma a adicionar os rótulos necessários à identificação de ocorrências de falhas e de intervalos temporais que acusem comportamentos anômalos.
 
-#### Simulação dos dados para treinamento
+### Simulação dos dados para treinamento
 
 Para o presente MVP, criamos um conjunto de registros já rotulados, de forma a reproduzir o log de manutenção que compõe a 'fonte de verdade' (SoT) do nosso sistema. Esses dados foram criados a partir de um script desenvolvido especificamente para esse fim (veja o [script para geração de dados para treinamento ```train_complex_data_generation_4.ipynb```](src/train_complex_data_generation_4.ipynb) e o [dataset simulado para treinamento ```training_dataset_complex.csv```](data/ingest/training_dataset_complex.csv)).
 
-**App. de treinamento** - O [script para treinamento ```reply_4_modeling_app.ipynb```](src/reply_4_modeling_app.ipynb) executa as seguintes funções:
+![Aspecto dos sinais simulados](assets/reply_4_simulated_signal_behaviour.png)
+*<center><sub>Aspecto dos sinais simulados</sub></center>*
+
+### App. de treinamento
+
+O [script para treinamento ```reply_4_modeling_app.ipynb```](src/reply_4_modeling_app.ipynb) executa as seguintes funções:
 
 > - **Análise exploratória (EDA)** - Entender as características e relações nos dados dos sensores.
 > - **Engenharia de features** - Extrair informações adicionais do `timestamp` para enriquecer o modelo.
@@ -122,327 +133,93 @@ Para o presente MVP, criamos um conjunto de registros já rotulados, de forma a 
 ![Predições e alertas](assets/predict.png)
 *<center><sub>Predições e alertas</sub></center>*
 
-dsfsdfasdsdf
+**Objetivo**
+
+Carregar da base de dados as leituras de sensores e submetê-las aos modelos de ML para predição da saúde dos equipamentos monitorados e eventual emissão de alertas.
+
+**Componentes**
+
+### App. de predição
+
+O [script para predição ```reply_4_predictor.py```](src/reply_4_predictor.py) é o responsável pelas atividades de predição efetiva e executa as seguintes tarefas:
+
+> - **Pré-processamento de dados** - Carrega as leituras do banco de dados e aplica as mesmas transformações usadas nos dados de treinamento, como codificação e escalonamento, adequando os dados aos modelos treinados.
+> - **Predições** - Utiliza os modelos criados anteriormente para realizar as predições a partir dos dados.
+> - **Motor de ponderação** - Utiliza um mecanismo de avaliação segundo regras de negócio configuráveis, para classificar as predições e gerar alertas.
+> - **Emissão de alertas** - Emite os alertas necessários.
 
 ![Registro de eventos de manutenção](assets/maintenance.png)
 *<center><sub>Registro de eventos de manutenção</sub></center>*
 
-dsfsdfasdsdf
+**Objetivo**
 
+Constituir a 'fonte de verdade', ou seja, o repositório único de informações sobre a saúde dos equipamentos, ocorrência de falhas e registro de comportamentos anômalos.
 
+**Componentes**
 
+### App. de manutenção
 
+Embora não tenha sido desenvolvida para este MVP, é um dos componentes mais importantes do sistema e que permite, em última instância, gerar os datasets históricos para treinamento e revisão de modelos. As funcionalidade mais importantes são destacadas na figura acima.
 
 
-* **1 - Modelagem de banco de dados** - Propor uma modelagem de banco de dados funcional e normalizada, adequada para armazenar os dados coletados pelos sensores.
-* **2 - Modelo de Machine Learning** - Criar um modelo simples de Machine Learning, utilizando os dados gerados na entrega anterior (ou dados simulados).
+##  Melhoramentos a partir das entregas anteriores
 
-## Vídeo explicativo
+### Modelos aperfeiçoados
 
-> - [FIAP / Reply - Sprint 3](https://www.youtube.com/watch?v=1H88-qi-KX8)
+Analisando as entregas anteriores, pudemos identificar várias oportunidades de melhoria que contribuíram para que os modelos atingissem métricas bastante favoráveis, como destaca a figura a seguir:
 
+![Comparação dos modelos](assets/reply_4_models_compare.png)
+*<center><sub>Comparação dos modelos</sub></center>*
 
-## Premissas
+Os modelos de regressão e classificação foram significativamente aprimorados através de quatro melhoramentos estratégicos focados na qualidade dos dados e na metodologia de treinamento, resultando em métricas de performance robustas e confiáveis, como mostra a figura acima. 
 
-### Foco no aprendizado
-.
+Destacamos algumas melhorias:
 
-## Uso de dados simulados
-.
+#### Geração de um dataset de treinamento mais robusto
 
-### Visão conceitual da solução
-<br>
+O dataset inicial, que mostrava um comportamento uniforme, foi substituído por um conjunto de dados mais rico, simulando múltiplos "ciclos de vida" de diferentes equipamentos. Isso introduziu uma variedade de cenários, incluindo falhas que ocorrem em estágios iniciais e tardios, e períodos de operação totalmente normais, refletindo um ambiente industrial mais realista e eliminando o viés dos dados originais.
 
-![Visão conceitual da solução](../assets/reply_4_overview.png)
-*<center><sub>Visão geral simplificada da arquitetura</sub></center>*
+#### Engenharia de features temporais
 
-#### Observação
-As entregas desta fase, destacadas na figura acima, estão listadas no item **Entregáveis e localização**, no final deste documento.
+A coluna `timestamp`, antes ignorada, foi processada para extrair features cíclicas (hora do dia, dia da semana). Essas features foram codificadas matematicamente (usando seno e cosseno) para permitir que os modelos identificassem padrões dependentes do tempo, como diferenças entre turnos de operação ou variações de temperatura ambiente.
 
-## 1 - Modelagem de banco de dados
+#### Tratamento do desbalanceamento de classes
 
-Dados, sabemos, são a base das soluções de IA. Para mantê-los, o desenvolvimento de um banco de dados bem estruturado logo de início é crucial para o sucesso dessas soluções a longo prazo. Vamos lidar com diferentes tipos e volumes de dados e, a maneira como eles serão armazenados impacta diretamente o desempenho e a escalabilidade do sistema em questão.
+Foi aplicado o parâmetro `class_weight='balanced'` ao modelo de classificação (SVM). Essa técnica ajustou o algoritmo para dar mais importância à classe minoritária (`desgaste_rolamento`), corrigindo o viés do modelo e aumentando significativamente sua capacidade de detectar corretamente esse tipo de falha (melhora no **recall**).
 
-### Diagrama Entidade-Relacionamento
-<br>
+#### Adoção de uma metodologia de validação estratificada
 
-![Diagrama Entidade-Relacionamento](assets/reply_3_DER.png)
-*<center><sub>Diagrama Entidade-Relacionamento</sub></center>*
+A divisão dos dados entre treino e teste foi ajustada para usar a estratificação (`stratify`). Isso garantiu que ambos os conjuntos de dados contivessem uma proporção representativa de cada modo de falha, proporcionando um benchmark de avaliação justo e resultando em métricas de performance que refletem a real capacidade preditiva dos modelos.
 
-### Relacionamentos implícitos (loose coupling)
 
-As tabelas criadas não têm uma chave estrangeira direta, pois a ligação entre elas é feita por meio de uma lógica na aplicação que usa o `DEVICE_ID` e o `FAILURE_DATE` para unir os dados de forma retrospectiva. Esta abordagem flexível permite a retroalimentação contínua do sistema.
+### Algumas funcionalidades e melhoramentos implementados na solução
 
-![Relacionamento implícito entre tabelas](assets/reply_3_loose_coupling.png)
-*<center><sub>Relacionamento implícito entre tabelas</sub></center>*
+#### Uso da magnitude vetorial (vibração)
+Para traduzir os dados brutos de vibração do sensor MPU6050, que são fornecidos em três eixos (X, Y, Z), foi implementado o cálculo da **magnitude vetorial (`√x² + y² + z²`)**. Essa abordagem consolida as três medições em uma única métrica robusta que representa a intensidade total da vibração, independentemente da sua direção. Isso garante que o dado enviado pelo ESP32 seja compatível com a entrada esperada pelos modelos de Machine Learning.
 
-### Descrição das tabelas e campos
+#### Fonte de dados híbrida na demonstração (Wokwi + CSV)
+Para a demonstração do Coletor, foi adotada uma estratégia híbrida. A chegada de uma mensagem MQTT do Wokwi é usada como um **gatilho em tempo real**, provando a conectividade do sistema. No entanto, o conteúdo dessa mensagem é descartado e, em seu lugar, o script insere a próxima linha de um arquivo CSV pré-gerado. Isso garante que os dados processados e armazenados sejam de alta qualidade e sigam uma progressão de falha realista, permitindo uma demonstração de predição com resultados significativos.
 
-#### `T_REPLY_SENSOR_READINGS`
+#### Processamento temporal dos dados
+Esta etapa teve duas fases críticas para permitir que os modelos "entendam" o tempo:
+* **Engenharia de Features:** O `timestamp` bruto foi processado para extrair features numéricas e cíclicas, como a hora do dia e o dia da semana. Essas features foram codificadas matematicamente (com seno e cosseno) para que o modelo pudesse aprender padrões temporais (ex: diferenças de operação entre turnos).
+* **Metodologia de Divisão:** A divisão dos dados para treino e teste foi feita de forma estratificada para garantir que todas as classes de falha estivessem representadas de forma justa na avaliação, gerando métricas de performance confiáveis.
 
-Tabela para as leituras coletadas dos sensores em campo, agregadas em uma série temporal pelo computador de borda. Serve de fonte primária para a análise de séries temporais e como conjunto de características (*features*) para os modelos preditivos.
+#### Motor de regras de Nnegócio (validação de predições)
+Foi criada uma camada de pós-processamento, chamada de "motor de regras", que analisa as saídas brutas de ambos os modelos (classificação e regressão). Sua função é aplicar o "bom senso" para identificar e tratar **predições logicamente conflitantes** (ex: status "Normal" com previsão de falha em 2 dias). O sistema traduz essas incongruências em um status final validado e um nível de alerta acionável (`Crítico`, `Atenção`), aumentando significativamente a confiabilidade e a utilidade das saídas do sistema.
 
-| Campos |  |
-|---:|---|
-| `ID` | `(PK)` Identificador único para cada leitura. Gerado por uma sequência. |
-| `TIMESTAMP` | `(DATETIME)` Momento exato da agregação da leitura. |
-| `DEVICE_ID` | `(VARCHAR)` Identificador do equipamento monitorado. |
-| `TEMPERATURE_C` | `(NUMBER)` Leitura de temperatura, em °C. |
-| `CURRENT_AMPS` | `(NUMBER)` Leitura de corrente elétrica, em A. |
-| `VIBRATION_RMS_G` | `(NUMBER)` Leitura de vibração, em g (aceleração). |
-| `DAYS_TO_FAILURE` | `(NUMBER)` Variável *target* para os modelos de regressão. Inicialmente, terá valor nulo e populada posteriormente a partir de registros de manutenção. |
-| `FAILURE_MODE` | `(VARCHAR)` Variável *target* para os modelos de classificação. Status do equipamento monitorado. Inicialmente, terá valor nulo e populada posteriormente a partir de registros de manutenção. |
-
-#### `T_REPLY_MAINTENANCE_EVENTS`
-
-Tabela para os registros históricos de manutenção, fonte para rotulagem retrospectiva¹. Armazena os registros de manutenção e falhas, que são a *fonte da verdade* para a criação das labels preditivas,
-fornecendo os timestamps e as causas das falhas e permitindo que a aplicação gere as labels `DAYS_TO_FAILURE` e `FAILURE_MODE` na tabela `T_REPLY_SENSOR_READINGS`
-
-| Campos |  |
-|---:|---|
-| `EVENT_ID` | `(PK)` Identificador único para cada evento. Gerado por uma sequência. |
-| `DEVICE_ID` | `(VARCHAR)` Identificador do equipamento monitorado. |
-| `FAILURE_DATE` | `(DATETIME)` Data e hora do registro do evento. |
-| `FAILURE_MODE` | `(VARCHAR)` Status registrado do equipamento monitorado. |
-| `DIAGNOSTIC_NOTES` | `(VARCHAR)` Notas técnicas adicionais de manutenção. |
-
-#### `MODEL_PREDICTIONS`
-
-Tabela para o armazenamento das predições. Permite manter uma separação entre uma base comparativa, que viabiliza a real avalição dos modelos ao longo do tempo, por meio do registro de falsos positivos ou negativos.
-
-| Campos |  |
-|---:|---|
-| `PREDICTION_ID` | `(PK)` Identificador único para cada evento. Gerado por uma sequência. |
-| `TIMESTAMP` | `(DATETIME)` Momento exato em que a predição foi gerada. |
-| `DEVICE_ID` | `(VARCHAR)` Identificador do equipamento monitorado. |
-| `PREDICTED_DAYS_TO_FAILURE` | `(NUMBER)` Predição da vida útil restante do componente. |
-| `PREDICTED_FAILURE_MODE` | `(VARCHAR)` Predição do estado do equipamento ('normal' ou 'em falha'). |
-| `SENSOR_READING_ID` | `(NUMBER)` Identificador da leitura do sensor que gerou esta predição. Liga a predição à tabela `T_REPLY_SENSOR_READINGS`. |
-| `EVALUATION_STATUS` | `(VARCHAR)` Status da avaliação da predição (ex: 'verdadeiro positivo', 'falso negativo', 'não avaliado'). |
-
-¹ - <sub>Veja [A fonte da verdade - Dados puros e os registros de manutenção](#a-fonte-da-verdade---dados-puros-e-os-registros-de-manutenção), adiante neste documento.</sub>
-
-### Fluxo de dados
-
-![Fluxo de dados](assets/reply_3_pipelines.png)
-*<center><sub>Fluxo de dados</sub></center>*
-
-### Restrições de integridade
-
-A escolha dos tipos de dados e seus tamanhos foi guiada por princípios de integridade dos dados, otimização de armazenamento e performance. Cada tipo foi selecionado para garantir que os dados sejam armazenados de forma precisa e que o banco de dados possa operar de maneira eficiente a longo prazo.
-Houve uma preocupação em *economizar* no que diz espeito ao tamanho dados dados, adotando-se sempre o mínimo necessário para acomodar adequadamente o dado correspondente (ex.: `EVALUATION_STATUS`-`VARCHAR(20 BYTE`) e `DIAGNOSTIC_NOTES`-`VARCHAR(255 BYTE)`).
-
-### Integração com visualização de dados
-
-A integração com ferramentas de visualização de dados abre um leque de possibilidades para acompanhar a saúde dos equipamentos e a performance dos modelos. Algumas ideias:
-> - **Gráfico de linha em tempo real**<br>
-Permite companhar a evolução dos valores de temperatura, corrente e vibração ao longo do tempo. Um esquema adequado de cores pode ajudar a identificar a mudança do status dos equipamentos.
-> - **Matriz de confusão acumulada**<br>
-Gráfico de pizza que mostra os valores acumulados de `Falsos Positivos` e `Verdadeiros Positivos`, mostrando de forma dinâmica o comportamento dos modelos.
-> - **Histogrma de distribuição das predições de vida útil**<br>
-Permite melhorar a programação de manutenções preventivas, a partir da visualização da quantidade de dias comumente prevista antes de uma falha.
-
-Podemos pensar em inúmeras outras possibilidades de visualização que entreguem real valor aos suários, todas utilizando os dados do nosso banco.
-Um dashboard dessa natureza poderia ser rapidamente construída utilizando-se o Stremlit. Ele apresenta vantagens como prototipgem rápida, integração facilitada e nativa com Python, controle total sobre o desenho da interface gráfica, além de ser ideal para um MVP.
-
-
-## 2 - Modelo de Machine Learning
-
-### Dados iniciais simulados
-Os dados simulados foram criados a partir de um script Python. Algumas características desses dados:
-> - Simulam o monitoramento de dois motores industriais idênticos.
-> - Incluem dados por um período de 60 dias, com uma medição a cada 10 minutos.
-> - Simulam uma falha progressiva em um dos equipamentos, a partir de 30 dias antes da falha total. O outro equipamento operará normalmente durante todo o período e servirá de linha de base.
-
-O script para geração dos dados encontra-se em src/data_generation.ipynb.
-
-### Pré-processamento inicial
-Os dados simulados não representam os dados crus coletados dos sensores. Em vez disso, eles recebem um primeiro tratamento, ou agregação em série temporal, já no computador de borda. Essa agregação sincroniza os dados dos sensores, combinados em um único pacote, em formato adequado para o envio.
-Como a frequência de leitura dos sensores pode ser diferente, o computador de borda efetua uma média, de forma a obter um valor único por sensor a cada intervalo definido (no nosso caso, 10 minutos).
-Os dados numéricos são formatados, para diminuir o volume enviado.
-
-### A *fonte da verdade* - Dados puros e os registros de manutenção
-Os dados que serão posteriormente utilizados para o treinamento dos modelos não são os dados puros recebidos do computador de borda e sim os registros enriquecidos de manutenção. Para compor esses registros e prepará-los para o treinamento de modelos, houve a intervenção de um engenheiro de dados que, a partir da ocorrência de uma falha, avaliou os dados históricos que levaram a ela, para identificar o início do comportamento anômalo causador da falha. Observe a imagem a seguir:
-
-![Timeline da falha](assets/reply_3_failure_timeline.png)
-*<center><sub>Timeline da falha</sub></center>*
-
-Eis a sequência:
-
-> 1. Ocorre a falha
-> 2. Um técnico de manutenção registra o evento. Esse registro contém o dia e horário exatos da ocorrência e o motivo (ex.: desgaste do rolamento, bobina do estator em curto etc.).
-> 3. Com base nesses registros, o cientista de dados ou equivalente vai investigar o sinal dos sensores para identificar o início dos sinais anômalos e, feito isso, irá proceder à rotulagem dos dados que antecederam a falha (ou backwards labeling), para que eles contenham a informação adicional da quantidade de dias para a ocorrência da falha (days_to_failure) e o status (failure_mode).
-
-Esse processo deverá ser repetido para cada falha registrada. Isso permitirá que se construa um dataset completo e rotulado ao longo do tempo e que esses dados sejam a ***fonte de verdade*** para o treinamento dos modelos.
-
-![Fluxo de dados para treinamento e para predição](assets/reply_3_pipelines.png)
-*<center><sub>Fluxo de dados para treinamento e para predição</sub></center>*
-
-### Escolha da abordagem
-Analisando detidamente o problema que estamos tentando resolver, ou seja, a predição de falhas em equipamentos industriais, percebemos que, embora sugira ser um simples problema de regressão, já que estamos analisando variáveis numéricas para determinar a quantidade de dias para falha ( ```days-to-failure``` ). Por outro lado, tratamos também de determinar o valor para uma categoria discreta ( ```failure_mode``` ), com o objetivo de determinar o estado do equipamento (normal ou anômalo), o que configuraria um problema de classificação.
- 
-Ao abraçar esses dois desafios, colocamo-nos diante de uma **abordagem híbrida**, com uma componente de classificação, para a emissão de alertas, e outra de regressão, para a construção de um prognóstico.
-
-### Exploração dos dados
-
-Todo o trabalho de preparação dos dados aqui comentado foi desenvolvido no notebook [sprint_3/src/reply_3_app.ipynb](src/reply_3_app.ipynb).
-
-Apesar de já termos uma forte noção das características dos dados adotados, por serem dados simulados, ainda assim e em nome da prática didática, realizamos a busca por dados ausentes e por duplicatas. Obviamente, os dados se mostraram bastante comportados nesse sentido. 
-Já, tanto a verificação de outliers, como da correlação entre variáveis, levantaram alguns pontos de reflexão, discutidos a seguir.
-
-#### Investigação de outliers
-
-A verificação de outliers revelou uma quantidade considerável de outliers. 
-Diante disso e observando visualmente o comportamento dos dados, levantamos a hipótese de que os outliers encontrados referem-se justamente àqueles dados portadores das informações de anomalia que estamos buscando. Por isso, passamos a investigar essa possibilidade.
-
-![Comportamento dos dados](assets/reply_3_data_behaviour.png)
-*<center><sub>Comportamento dos dados</sub></center>*
-
-Filtramos o dataset, mantendo apenas os dados do equipamento que não apresentou falha e geramos um novo boxplot. Como resultado, verificamos a diminuição bastante acentuada dos outliers, o que nos levou a considerar verdadeira a nossa hipótese, **mantendo os outliers para treinamento dos modelos**.
-
-![Outliers em dados com e sem falhas](assets/reply_3_outliers.png)
-*<center><sub>Outliers em dados com e sem falhas</sub></center>*
-
-Via de regra, outliers são dados legítimos e portanto importantes para o problema. Eles representam um problema quando indicam uma falha nítida dos dados, um erro claro de coleta. Já quando o objetivo principal é detectar anomalias em situações como a nossa, ou seja, falhas em equipamentos, os outliers podem ser exatamente os dados que procuramos, pois carregam a informação da anomalia e, nesse caso, devem ser preservados.
-
-Outliers são nocivos quando há a possibilidade de uma falha de leitura, de registro dos dados ou quando representam uma variável desconhecida e desconsiderada, ainda que importante. Por outro lado, são benéficos e necessários quando nos ajudam a compreender o comportamento dos dados de forma legítima (veja o artigo [The impact of outliers on Data: when to remove and when to retain](https://medium.com/@abhaysingh71711/the-impact-of-outliers-on-data-when-to-remove-and-when-to-retain-fb6e474ddbd8)).
-
-
-#### Correlação de variáveis
-
-Além do heatmap da matriz de correlação (abaixo), a mera observação visual dos dados já sugere uma alta correlação entre as variáveis, especialmente no período que antecede a falha.
-
-![Heatmap da matriz de correlação das variáveis](assets/reply_3_heatmap.png)
-*<center><sub>Heatmap da matriz de correlação das variáveis</sub></center>*
-
-A própria lógica da ocorrência de uma falha em um equipamento rotativo sugere essa correlação:
-> - À medida que os componentes de um motor, por exemplo, se desgastam, é esperado que o atrito entre as peças móveis aumente. 
-> - Esse atrito extra gera calor, o que faz com que a temperatura do componente aumente.
-> - Ao mesmo tempo, o atrito e o desgaste geram um aumento na vibração, que se manifesta como picos e um aumento no valor RMS. 
-> - Motores industriais síncronos de corrente alternada (os mais comuns) têm rotação constante, sincronizada à frequência da rede elétrica. Para manter a rotação numa situação de atrito elevado, acabam por aumentar o torque necessário, exigindo mais corrente da rede elétrica. 
-
-Logo, maior desgaste, maior vibração, maior atrito, maior temperatura e mais corrente, ou seja, as variáveis se comportam de forma muito semelhante.
-
-Há diversos motivos para querermos remover variáveis de alta correlação (veja, por exemplo, o artigo [Why we have to remove highly correlated features in Machine Learning](https://medium.com/@sujathamudadla1213/why-we-have-to-remove-highly-correlated-features-in-machine-learning-9a8416286f18))   . Elas podem ser nocivas de diversas maneiras e prejudicar os resultados que buscamos.
-Ao investigar nossos dados, no entanto, surgiu-nos a hipótese de que o comportamento de alta correlação detectado pode estar ligado ao fato de se tratar de dados simulados. Dados reais, via de regra, não são tão comportados.
-
-Além disso, nem todas as falhas em motores se devem ao desgaste. Podemos imaginar outros exemplos, como rede elétrica deficiente, má fixação dos componentes, acoplamentos desalinhados, desbalanceamento, impactos etc. Diferentes causas podem levar a correlação a outros índices.
-
-De qualquer maneira, os dados, ainda que correlacionados, trazem informações diferentes e mesmo complementares, contam diferentes histórias, levando a um diagnóstico mais rico. 
-
-Expostas essas razões, **optamos por manter as variáveis**, por considerar que a correlação detectada pode ser benéfica e mesmo contextual.
-
-### Modelos adotados
-
-Escolhemos quatro algorítmos para o desenvolvimento dos modelos:
-
-**Modelos de regressão**
-
-> 1. Regressão Linear
-> 2. Random Forest Regressor
-
-**Modelos de classificação**
-> 3. Regressão Logística
-> 4. Support Vector Machine
-
-Como critério para a escolha dos modelos **Regressão Linear** e **Regressão Logística**, consideramos a sua simplicidade e também por se tratar de abordagens lineares. Ambos são modelos baseline, fáceis de treinar e fornecem uma base de comparação fundamental.
-
-Já os modelos **Random Forest Regressor** e **Support Vector Machine** são mais complexos e não lineares. Permitem uma abordagem mais robusta, que permite capturar padrões complexos e não-lineares nos dados.
-
-Mais adiante, poderemos observar os resultados da avaliação dos modelos e tecer algumas considerações.
-
-### Treinamento
-
-Uma vez que nosso dataset esteja devidamente preparado, temos a base adequada para o desenvolvimento dos modelos preditivos, o que nos leva à fase de treinamento.
-
-O objetivo aqui é que nosso modelo possa compreender a história oculta que nossos dados nos contam e aprender a identificar os padrões sutis que levam a uma falha futura.
-
-![Treinamento de modelos](assets/reply_3_model_training.png)
-*<center><sub>Treinamento de modelos</sub></center>*
-
-Nossa estratégia de treinamento dos modelos foi dividida em duas frentes para resolver o problema de manutenção preditiva de forma abrangente:
-
-> 1. Primeiro, um modelo de classificação (Regressão Logística e SVM) foi treinado para a tarefa de **detecção de falha**, ou seja, para classificar o estado do motor (```failure_mode```) em ```normal``` ou ```failure_in_progress``` com base nas leituras dos sensores. 
-> 2. Em seguida, um modelo de regressão (Regressão Linear e Random Forest Regressor) foi treinado para a tarefa de **prognóstico**, prevendo o valor contínuo de 'dias para a falha' (```days_to_failure```) quando a detecção de falha já tiver sido feita. 
-
-Essa abordagem dupla garante que o sistema não apenas alerte sobre uma falha iminente, mas também forneça um prognóstico preciso da vida útil restante do componente.
-
-### Análise Comparativa dos Modelos
-
-A estratégia de utilizar diferentes tipos de modelos para as tarefas de regressão e classificação nos permitiu não apenas resolver o problema, mas também compreender a natureza dos nossos dados. Os resultados obtidos revelaram que a complexidade do problema exige abordagens não-lineares, validando a nossa escolha de modelos mais robustos.
-
-![Comparação dos modelos - Métricas](assets/reply_3_models_compare.png)
-*<center><sub>Comparação dos modelos - Métricas</sub></center>*
-
-
-#### Modelos de Regressão - Previsão da Vida Útil Restante
-
-O desempenho dos modelos de regressão, medido pelo **Coeficiente de Determinação ($R²$)**, mostrou uma diferença significativa:
-
-* **Regressão Linear** - Apresentou um $R²$ de **0.28**, um valor considerado baixo. Este resultado indica que o modelo de regressão linear foi capaz de explicar apenas 28% da variabilidade dos dias até a falha. Isso sugere que a relação entre as leituras dos sensores e o tempo para a falha não é linear, o que era esperado em um processo físico complexo como a degradação de um motor.
-
-* **Random Forest Regressor** - Demonstrou um desempenho substancialmente superior, com um $R²$ de **0.70**. Este valor significa que o modelo explica 70% da variabilidade dos dados. O sucesso do Random Forest Regressor comprova que ele foi capaz de capturar as relações não-lineares e os padrões complexos inerentes ao problema. Para a nossa solução de prognóstico, o Random Forest é claramente a melhor escolha.
-
-#### Modelos de Classificação: - Detecção de Falhas
-
-A tarefa de classificação, que visa determinar se o motor está em estado 'Normal' ou 'Em Falha', foi abordada com sucesso por ambos os modelos.
-
-* **Regressão Logística e Support Vector Machine (SVM)** - Ambos os modelos atingiram uma **alta acurácia**, indicando que conseguiram classificar corretamente a grande maioria dos casos. No entanto, para uma análise mais detalhada, é essencial olhar para a **Matriz de Confusão**, abaixo.
-
-![Matrizes de confusão para os modelos de classificação](assets/reply_3_confusion_matrices.png)
-*<center><sub>Matrizes de confusão para os modelos de classificação</sub></center>*
-
-A matriz de confusão nos permite identificar os tipos de erros. No contexto de manutenção preditiva, os **Falsos Negativos** (quando o modelo prevê 'Normal', mas a falha é real) são o pior tipo de erro, pois podem levar a falhas catastróficas. Por outro lado, os **Falsos Positivos** (um alerta falso) são menos críticos, mas podem causar custos desnecessários com inspeções. A análise da matriz de confusão de ambos os modelos mostrou que eles minimizam de forma eficaz os Falsos Negativos, tornando-os excelentes candidatos para a nossa solução de detecção.
-
-A análise comparativa valida a nossa estratégia de utilizar modelos de Machine Learning distintos. A abordagem híbrida, combinando um modelo de classificação (como SVM ou Regressão Logística) para a detecção de falha e um modelo de regressão robusto (Random Forest) para o prognóstico da vida útil restante, é a mais eficaz. Ela nos permite construir uma solução completa, que não só alerta para uma falha iminente, mas também fornece um prazo acionável para a manutenção.
-
-### Predições
-
-Submetemos alguns exemplos de leituras aos modelos para obter suas predições. Desses testes, destacamos uma das predições, que nos provoca um ponto de reflexão. Eis os resultados:
-```
-Dados puros
-    [[55.   7.5  0.8  1.   0. ]]
-
-Dados de leitura
-    - Temperatura: 55.0 °C
-    - Corrente: 7.5 A
-    - Vibração: 0.8 g
-    - Dispositivo: motor_1
-
-Dados padronizados
-    [[ 1.9   1.26  0.96  1.   -1.  ]]
-
-Predições
-    - Vida Útil Restante (RF Regressor): 18.43 dias
-    - Classificação (Regressão Logística): o estado do motor é 'normal'
-
-```
-
-O exemplo nos traz informações importantes:
-
-#### Validação da abordagem híbrida
-
-O exemplo mostra os dois modelos trabalhando em conjunto. O modelo de Regressão Logística dá o parecer primário ("o estado do motor é 'normal'"), enquanto o modelo de Random Forest fornece uma predição numérica ("18.43 dias"). Essa dualidade de resultados valida a nossa estratégia de usar um modelo para cada tipo de problema. 
-
-#### A Inconsistência lógica
-
-O exemplo deixa evidente que há uma incongruência lógica nas predições. Ora, se o motor está normal, ele não deveria ter uma vida útil curta. A predição do modelo de regressão só faria sentido se o modelo de classificação tivesse indicado um motor em falha. Isso aponta para a realidade de que os modelos, apesar de fornecerem diagnósticos complementares, foram construídos e trabalham de forma independente, o que pode levar a tais discrepâncias. 
-
-Este exemplo, em vez de ser um problema, é uma prova de que a arquitetura de sistema de dois passos é a mais adequada para o problema de manutenção preditiva. Ele aponta para a necessidade da integração prática dos modelos, não apenas sobre o seu treinamento.
-
-Essa integração deve obedecer a uma lógica de negócio, presente na própria lógica da aplicação. Dessa forma, os dados seriam submetidos à regressão, **apenas** se a classificação detectar uma falha, evitando assim, predições inconsistentes.
-
-Além disso, não podemos deixar de mencionar que o desenvolvimento de modelos de sucesso não é uma atividade linear. Ao contrário, é fruto de um processo iterativo de melhoria contínua, ao longo de erros, ajustes, hipóteses falhas etc., até que tenhamos resultados satisfatórios.
+#### Uso do SQLAlchemy (abstração e segurança no acesso a dados)
+Para a comunicação entre os scripts Python e o banco de dados, foi utilizada a biblioteca SQLAlchemy. Sua implementação trouxe três vantagens principais:
+* **Portabilidade:** Permitiu que os scripts fossem facilmente adaptados para o banco de dados Oracle do projeto, apenas alterando a string de conexão.
+* **Segurança:** Garantiu que todas as interações com o banco, mesmo as que usam SQL nativo, fossem seguras contra ataques de *SQL Injection*.
+* **Robustez:** Abstraiu o gerenciamento de conexões e transações, alinhando o projeto com as melhores práticas de engenharia de software para acesso a dados.
 
 ## Conclusão
 
-A jornada de aprendizado neste projeto nos mostrou que IA e Ciência de Dados são um exercício de decisões fundamentadas.
+Nesta fase do projeto, foi concluído com sucesso o desenvolvimento e a validação de uma pipeline completa para manutenção preditiva, desde a coleta de dados de sensores até a geração de alertas inteligentes. A implementação resultou em modelos de Machine Learning com alta capacidade preditiva (Acurácia de Classificação > 0.99 e R² de Regressão > 0.88), validados por uma metodologia robusta de pré-processamento e engenharia de features. 
 
-Contrariando práticas comuns, preferimos o atrevimento de manter outliers e variáveis altamente correlacionadas, pois nossa investigação revelou que, para este contexto, eles não são ruído, mas sim sinais valiosos que enriquecem os modelos. 
+O sistema, arquitetado de forma modular, está composto por serviços independentes para coleta e análise de dados, e incorpora um motor de regras de negócio para traduzir as predições em alertas acionáveis e confiáveis. A entrega atual estabelece uma base técnica sólida, demonstrando a viabilidade do projeto e preparando o sistema para as próximas fases de testes em ambiente real.
 
-Da mesma forma, em vez de simplificar o problema, optamos por uma abordagem híbrida de IA, combinando modelos de classificação para a detecção de alertas e de regressão para o prognóstico de falhas. 
-
-Essa estratégia, embora mais complexa, permitiu-nos exercitar o desenvolvimento de uma solução diferenciada, que reflete nossa premissa de ir além do convencional, enfrentando os desafios do problema real com um espírito de exploração e melhoria contínua.
 
 **Grupo TiãoTech**
 
@@ -452,17 +229,15 @@ Essa estratégia, embora mais complexa, permitiu-nos exercitar o desenvolvimento
 
 ### Vídeo explicativo
 
-> - [FIAP / Reply - Sprint 3](https://www.youtube.com/watch?v=1H88-qi-KX8)
+> - [FIAP / Reply - Sprint 4](https://www.youtube.com/watch?v=1H88-qi-KX8)
 
 ### Banco de dados
 
 > - **Script para criação das tabelas**<br />
-[sprint_3/database/reply_3_model.sql](database/reply_3_model.sql)
+[sprint_4/data/database/reply_4_model.sql](database/reply_3_model.sql)
 > - **Diagrama ER**<br />
-[sprint_3/assets/reply_3_DER.png](assets/reply_3_DER.png)
-> - **Documentação adicional**<br />
-[sprint_3/database/reply_3.dmd](database/reply_3.dmd)<br />
-[sprint_3/database/reply_3](database/reply_3)
+[sprint_4/assets/reply_3_DER.png](assets/reply_3_DER.png)
+
 
 ### Modelo de Machine Learning
 
@@ -495,13 +270,17 @@ Dentre os arquivos e pastas presentes na raiz do sprint 3, definem-se:
 
 - **assets**: imagens.
 
-- **database**: documentação do banco de dados.
+- **data/database**: script SQL do banco de dados.
 
-- **sensor_data**: Dados simulados.
+- **data/ingest**: dataset para treinamnto dos modelos
+
+- **data/predict** - dataset para predições
+
+- **models**: Modelos de ML treinados
+
+- **sensors_wokwi**: Daods do projeto do computador de borda.
 
 - **src**: Código fonte da aplicação
-
-- **trained_models**: Modelos de ML treinados
 
 - **README.md**: este documento.
 

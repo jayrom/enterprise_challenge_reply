@@ -17,139 +17,85 @@ MPU6050 encontrado!
 DS18B20 encontrado!
 Tentando conexão MQTT...Conectado!
 Leitura atualizada: Temp=15.12 C, Vibr=13.13 m/s^2, Corr=-1.69 A
-15.12,13.13,-1.69
 Leitura atualizada: Temp=15.12 C, Vibr=13.13 m/s^2, Corr=-0.61 A
-15.12,13.13,-0.61
 Leitura atualizada: Temp=15.12 C, Vibr=13.13 m/s^2, Corr=-0.61 A
-15.12,13.13,-0.61
 Tentando conexão MQTT...Conectado!
 Leitura atualizada: Temp=31.00 C, Vibr=13.13 m/s^2, Corr=-0.61 A
-31.00,13.13,-0.61
 Leitura atualizada: Temp=31.00 C, Vibr=7.25 m/s^2, Corr=-0.61 A
-31.00,7.25,-0.61
 Leitura atualizada: Temp=31.00 C, Vibr=11.33 m/s^2, Corr=-0.61 A
-31.00,11.33,-0.61
 Leitura atualizada: Temp=31.00 C, Vibr=4.55 m/s^2, Corr=-0.61 A
-31.00,4.55,-0.61
 Tentando conexão MQTT...Conectado!
 Leitura atualizada: Temp=31.00 C, Vibr=4.55 m/s^2, Corr=0.03 A
-31.00,4.55,0.03
 Leitura atualizada: Temp=51.75 C, Vibr=4.55 m/s^2, Corr=0.03 A
-51.75,4.55,0.03
 Leitura atualizada: Temp=48.50 C, Vibr=6.22 m/s^2, Corr=0.03 A
-48.50,6.22,0.03
 Tentando conexão MQTT...Conectado!
 Leitura atualizada: Temp=48.50 C, Vibr=9.25 m/s^2, Corr=0.03 A
-48.50,9.25,0.03
 ------------------------------------------
 Criando registro com a última leitura do intervalo...
 Registro criado e adicionado ao pacote.
 Leitura atualizada: Temp=21.50 C, Vibr=9.25 m/s^2, Corr=1.86 A
-21.50,9.25,1.86
 Leitura atualizada: Temp=21.50 C, Vibr=9.25 m/s^2, Corr=-0.61 A
-21.50,9.25,-0.61
 Leitura atualizada: Temp=21.50 C, Vibr=9.25 m/s^2, Corr=3.58 A
-21.50,9.25,3.58
 Tentando conexão MQTT...Conectado!
 Leitura atualizada: Temp=21.50 C, Vibr=3.25 m/s^2, Corr=3.58 A
-21.50,3.25,3.58
 Leitura atualizada: Temp=8.75 C, Vibr=4.73 m/s^2, Corr=3.58 A
-8.75,4.73,3.58
 Leitura atualizada: Temp=2.38 C, Vibr=4.73 m/s^2, Corr=3.58 A
-2.38,4.73,3.58
 Tentando conexão MQTT...Conectado!
 Leitura atualizada: Temp=8.75 C, Vibr=4.73 m/s^2, Corr=3.58 A
-8.75,4.73,3.58
 Leitura atualizada: Temp=4.00 C, Vibr=4.73 m/s^2, Corr=3.58 A
-4.00,4.73,3.58
 Leitura atualizada: Temp=4.00 C, Vibr=4.73 m/s^2, Corr=3.95 A
-4.00,4.73,3.95
 Leitura atualizada: Temp=24.62 C, Vibr=4.73 m/s^2, Corr=3.95 A
-24.62,4.73,3.95
 Tentando conexão MQTT...Conectado!
 Leitura atualizada: Temp=5.50 C, Vibr=4.73 m/s^2, Corr=3.95 A
-5.50,4.73,3.95
 Leitura atualizada: Temp=5.50 C, Vibr=8.92 m/s^2, Corr=3.95 A
-5.50,8.92,3.95
 Leitura atualizada: Temp=5.50 C, Vibr=8.63 m/s^2, Corr=3.95 A
-5.50,8.63,3.95
 Tentando conexão MQTT...Conectado!
 Leitura atualizada: Temp=5.50 C, Vibr=11.30 m/s^2, Corr=3.95 A
-5.50,11.30,3.95
 Leitura atualizada: Temp=5.50 C, Vibr=8.80 m/s^2, Corr=3.95 A
-5.50,8.80,3.95
 ------------------------------------------
 Criando registro com a última leitura do intervalo...
 Registro criado e adicionado ao pacote.
 Leitura atualizada: Temp=10.25 C, Vibr=8.80 m/s^2, Corr=3.95 A
-10.25,8.80,3.95
 Leitura atualizada: Temp=10.25 C, Vibr=8.80 m/s^2, Corr=3.95 A
-10.25,8.80,3.95
 Tentando conexão MQTT...Conectado!
 Leitura atualizada: Temp=10.25 C, Vibr=8.80 m/s^2, Corr=-2.97 A
-10.25,8.80,-2.97
 Leitura atualizada: Temp=10.25 C, Vibr=8.80 m/s^2, Corr=-1.79 A
-10.25,8.80,-1.79
 Leitura atualizada: Temp=10.25 C, Vibr=8.80 m/s^2, Corr=-2.42 A
-10.25,8.80,-2.42
 Leitura atualizada: Temp=-4.00 C, Vibr=8.80 m/s^2, Corr=-2.42 A
--4.00,8.80,-2.42
 Tentando conexão MQTT...Conectado!
 Leitura atualizada: Temp=8.75 C, Vibr=8.80 m/s^2, Corr=-2.42 A
-8.75,8.80,-2.42
 Leitura atualizada: Temp=8.75 C, Vibr=11.87 m/s^2, Corr=-2.42 A
-8.75,11.87,-2.42
 Leitura atualizada: Temp=8.75 C, Vibr=13.56 m/s^2, Corr=-2.42 A
-8.75,13.56,-2.42
 Tentando conexão MQTT...Conectado!
 Leitura atualizada: Temp=8.75 C, Vibr=10.80 m/s^2, Corr=-2.42 A
-8.75,10.80,-2.42
 Leitura atualizada: Temp=8.75 C, Vibr=10.80 m/s^2, Corr=-2.42 A
-8.75,10.80,-2.42
 Tentando conexão MQTT...Conectado!
 Leitura atualizada: Temp=8.75 C, Vibr=10.98 m/s^2, Corr=-1.52 A
-8.75,10.98,-1.52
 Leitura atualizada: Temp=-10.38 C, Vibr=10.98 m/s^2, Corr=-1.52 A
--10.38,10.98,-1.52
 ------------------------------------------
 Criando registro com a última leitura do intervalo...
 Registro criado e adicionado ao pacote.
 Leitura atualizada: Temp=-10.38 C, Vibr=10.98 m/s^2, Corr=-1.52 A
--10.38,10.98,-1.52
 Leitura atualizada: Temp=-10.38 C, Vibr=1.83 m/s^2, Corr=-1.52 A
--10.38,1.83,-1.52
 Tentando conexão MQTT...Conectado!
 Leitura atualizada: Temp=-10.38 C, Vibr=1.83 m/s^2, Corr=-1.52 A
--10.38,1.83,-1.52
 Leitura atualizada: Temp=4.00 C, Vibr=1.83 m/s^2, Corr=-1.52 A
-4.00,1.83,-1.52
 Leitura atualizada: Temp=4.00 C, Vibr=1.83 m/s^2, Corr=-1.52 A
-4.00,1.83,-1.52
 Leitura atualizada: Temp=4.00 C, Vibr=1.83 m/s^2, Corr=-1.52 A
-4.00,1.83,-1.52
 Tentando conexão MQTT...Conectado!
 Leitura atualizada: Temp=4.00 C, Vibr=1.83 m/s^2, Corr=-1.52 A
-4.00,1.83,-1.52
 Leitura atualizada: Temp=4.00 C, Vibr=1.83 m/s^2, Corr=-1.52 A
-4.00,1.83,-1.52
 Tentando conexão MQTT...Conectado!
 Leitura atualizada: Temp=4.00 C, Vibr=1.83 m/s^2, Corr=-1.52 A
-4.00,1.83,-1.52
 Tentando conexão MQTT...Conectado!
 Leitura atualizada: Temp=26.25 C, Vibr=1.83 m/s^2, Corr=-3.24 A
-26.25,1.83,-3.24
 Leitura atualizada: Temp=26.25 C, Vibr=7.67 m/s^2, Corr=-3.24 A
-26.25,7.67,-3.24
 Tentando conexão MQTT...Conectado!
 Leitura atualizada: Temp=11.88 C, Vibr=7.67 m/s^2, Corr=-3.24 A
-11.88,7.67,-3.24
 Leitura atualizada: Temp=11.88 C, Vibr=7.67 m/s^2, Corr=-4.42 A
-11.88,7.67,-4.42
 Leitura atualizada: Temp=11.88 C, Vibr=7.67 m/s^2, Corr=1.04 A
-11.88,7.67,1.04
 Tentando conexão MQTT...Conectado!
 Leitura atualizada: Temp=11.88 C, Vibr=7.67 m/s^2, Corr=1.04 A
-11.88,7.67,1.04
 ------------------------------------------
 Criando registro com a última leitura do intervalo...
 Registro criado e adicionado ao pacote.
@@ -157,21 +103,15 @@ Registro criado e adicionado ao pacote.
 Preparando para enviar pacote de dados via MQTT...
 Payload a ser enviado:
 {"records":[{"timestamp":30000,"temperatura_avg":48.5,"vibracao_avg":9.248936,"corrente_avg":0.03},{"timestamp":60000,"temperatura_avg":5.5,"vibracao_avg":8.798355,"corrente_avg":3.95},{"timestamp":90000,"temperatura_avg":-10.375,"vibracao_avg":10.97504,"corrente_avg":-1.52},{"timestamp":120000,"temperatura_avg":11.875,"vibracao_avg":7.674153,"corrente_avg":1.04}],"deviceId":"reply-equip-001"}
-Falha ao publicar pacote MQTT.
+Pacote MQTT publicado com sucesso!
 Leitura atualizada: Temp=11.88 C, Vibr=7.67 m/s^2, Corr=0.22 A
-11.88,7.67,0.22
 Leitura atualizada: Temp=2.38 C, Vibr=7.67 m/s^2, Corr=-2.15 A
-2.38,7.67,-2.15
 Tentando conexão MQTT...Conectado!
 Leitura atualizada: Temp=2.38 C, Vibr=6.39 m/s^2, Corr=-2.15 A
-2.38,6.39,-2.15
 Leitura atualizada: Temp=2.38 C, Vibr=6.39 m/s^2, Corr=-2.15 A
-2.38,6.39,-2.15
 Tentando conexão MQTT...Conectado!
 Leitura atualizada: Temp=2.38 C, Vibr=6.39 m/s^2, Corr=-2.15 A
-2.38,6.39,-2.15
 Leitura atualizada: Temp=2.38 C, Vibr=6.39 m/s^2, Corr=-2.15 A
-2.38,6.39,-2.15
 Leitura atualizada: Temp=2.38 C, Vibr=6.39 m/s^2, Corr=-2.15 A
 2.38,6.39,-2.15
 Tentando conexão MQTT...Conectado!
