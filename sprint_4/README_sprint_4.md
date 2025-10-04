@@ -49,26 +49,82 @@ O principal objetivo desta entrega é desenvolver um mínimo produto viável, ou
 
 A seguir descrevemos os principais fluxos previstos para a solução:
 
-![Visão geral da solução](assets/collect.png)
+![Coleta e persistência inicial de leituras dos sensores](assets/collect.png)
 *<center><sub>Coleta e persistência inicial de leituras dos sensores</sub></center>*
 
-**Objetivo** - Coletar, via MQTT, as leituras enviadas pelos computadpores de borda, que estão conectados aos sensores e armazená-las no banco de dados para posterior processamento.
+**Objetivo**
+
+Coletar, via MQTT, as leituras enviadas pelos computadpores de borda, que estão conectados aos sensores e armazená-las no banco de dados para posterior processamento.
 
 **Componentes**
 
-> - **Sensores** - Esta solução inclui um kit de três sensores acoplados a um motor industrial
+#### Computação de campo
 
-![Visão geral da solução](assets/train.png)
+Esta solução inclui um kit de campo composto por três sensores acoplados a um motor industrial:
+> - Sensor de temperatura
+> - Sensor de vibração
+> - Sensor de corrente elétrica
+
+Os sensores estão conectados a um ESP32, enviando sinais periodicamente. 
+O ESP32 foi programado¹ para receber as leituras em intervalos regulares e realizar um pré-processamento dos sinais, conforme segue:
+> - Recebe as leituras dos sensores em intervalos pré-determinados;
+> - Agrega os valores de vibração nos 3 eixos dimensionais em um único valor;
+> - Agrega leituras dos sensores em registro único, temporalmente identificadas;
+> - Compõe um payload em JSON com um número determinado de leituras;
+> - Envia o payload completo em intervalos pré-determinados.
+
+¹ - Veja o código em `src/adge_app.cpp`
+
+#### Simulação de sensores e ESP32
+
+Para este MVP, os sensores foram simulados utilizando-se o Wokwi. O circuito utilizado na simulação é mostrado na figura a seguir:
+
+![Circuito de simulação de IoT](assets/reply_4_wokwi_circuitry.png)
+*<center><sub>Circuito de simulação de IoT</sub></center>*
+
+#### Simulação dos dados para predição
+
+Considerando que os dados efetivamente trazidos do Wokwi não têm valor analítico, das as limitações do simulador, criamos um dataset de dados que procuram imitar os sinais que seriam gerados em uma situação real pelos sensores. Esses dados foram criados a partir de um script desenvolvido especificamente para esse fim (veja o [script para geração de dados para predição](src/predict_data_generation_4.ipynb) e o [dataset simulado para predição](data/predict/dados_teste_para_predicao_1.csv)). 
+
+#### Serviço coletor
+
+Conecta o broker MQTT para receber os pacotes enviados pelo ESP32 periodicamente, formata os registros adequadamente e os envia ao banco de dados, populando a tabela ```T_REPLY_SENSOR_READINGS```.
+
+![Modelagem e treinamento](assets/train.png)
 *<center><sub>Modelagem e treinamento</sub></center>*
 
-dsfsdfasdsdf
+**Objetivo**
 
-![Visão geral da solução](assets/predict.png)
+> Criar e avaliar os modelos de Machine Learning utilizados na presente solução, assim como criar os demais artefatos necessários à sua reprodutibilidade em diferentes ambientes.
+
+**Componentes**
+
+#### Dataset para treinamento
+
+O conjunto de registros que seria utilizado em um ambiente de produção não é composto por leituras puras. Ele recebe a intervenção humana de forma a adicionar os rótulos necessários à identificação de ocorrências de falhas e de intervalos temporais que acusem comportamentos anômalos.
+
+#### Simulação dos dados para treinamento
+
+Para o presente MVP, criamos um conjunto de registros já rotulados, de forma a reproduzir o log de manutenção que compõe a 'fonte de verdade' (SoT) do nosso sistema. Esses dados foram criados a partir de um script desenvolvido especificamente para esse fim (veja o [script para geração de dados para treinamento ```train_complex_data_generation_4.ipynb```](src/train_complex_data_generation_4.ipynb) e o [dataset simulado para treinamento ```training_dataset_complex.csv```](data/ingest/training_dataset_complex.csv)).
+
+**App. de treinamento** - O [script para treinamento ```reply_4_modeling_app.ipynb```](src/reply_4_modeling_app.ipynb) executa as seguintes funções:
+
+> - **Análise exploratória (EDA)** - Entender as características e relações nos dados dos sensores.
+> - **Engenharia de features** - Extrair informações adicionais do `timestamp` para enriquecer o modelo.
+> - **Treinamento de modelos**
+>    * **Regressão** - Prever os "dias para a falha" (`days_to_failure`).
+>    * **Classificação** - Identificar o "modo de falha" (`failure_mode`).
+> - **Avaliação** - Medir a performance dos modelos de forma robusta e confiável.
+> - **Exportação** - Salvar os modelos treinados e artefatos³ para uso em produção.
+
+³ - Os modelos e artefatos encontram-se na pasta ```models```.
+
+![Predições e alertas](assets/predict.png)
 *<center><sub>Predições e alertas</sub></center>*
 
 dsfsdfasdsdf
 
-![Visão geral da solução](assets/maintenance.png)
+![Registro de eventos de manutenção](assets/maintenance.png)
 *<center><sub>Registro de eventos de manutenção</sub></center>*
 
 dsfsdfasdsdf
